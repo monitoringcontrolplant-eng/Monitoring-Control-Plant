@@ -19,7 +19,7 @@
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         brand: {
-                            50: '#fffbebe',
+                            50: '#fffbeb',
                             100: '#fef3c7',
                             500: '#f59e0b',
                             600: '#d97706',
@@ -52,13 +52,177 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans flex flex-col antialiased">
 
-    <!-- Alert / Toast Container -->
+    <!-- Toast Container -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
 
-    <!-- Modal Notification / Dialog -->
+    <!-- Generic Modal Container -->
     <div id="modal-container" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all scale-100">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all scale-100 overflow-hidden">
             <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Edit Transaction Modal -->
+    <div id="edit-trx-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto custom-scrollbar border border-slate-100">
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-amber-500"></i> Edit Transaksi Pengisian Oli
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <form id="edit-oil-form" onsubmit="handleEditFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="edit-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Code Unit</label>
+                        <input type="text" id="edit-code-unit" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none uppercase text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Tanggal</label>
+                        <input type="date" id="edit-tanggal" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Jumlah Oil (Liter)</label>
+                        <input type="number" step="0.1" min="0.1" id="edit-jumlah-oil" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Jenis Oil</label>
+                        <select id="edit-jenis-oil" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Type Oil</label>
+                        <select id="edit-type-oil" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Component</label>
+                        <select id="edit-component" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Jenis Pengisian</label>
+                        <select id="edit-jenis-pengisian" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Shift</label>
+                        <select id="edit-shift" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm">
+                            <option value="DS">DS (Day Shift)</option>
+                            <option value="NS">NS (Night Shift)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Station</label>
+                        <input type="text" id="edit-station" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Mekanik / Manpower</label>
+                        <input type="text" id="edit-manpower" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Problem / Catatan</label>
+                        <input type="text" id="edit-problem" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-200 flex justify-end gap-3">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold text-sm transition-all">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-semibold text-sm shadow-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Permissions Modal -->
+    <div id="permissions-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 transform transition-all border border-slate-100">
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-amber-500"></i> Kelola Hak Akses User
+                    </h3>
+                    <p class="text-xs text-slate-500" id="perm-modal-user-title">User: -</p>
+                </div>
+                <button onclick="closePermissionsModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="perm-user-id">
+
+            <div class="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Akses Dashboard</p>
+                        <p class="text-[11px] text-slate-500">Melihat grafik & KPI pemakaian oli</p>
+                    </div>
+                    <input type="checkbox" id="perm-view-dashboard" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+
+                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Akses Input Transaksi</p>
+                        <p class="text-[11px] text-slate-500">Menambah data pengisian oli baru</p>
+                    </div>
+                    <input type="checkbox" id="perm-input-trx" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+
+                <div class="p-3 bg-amber-50/60 rounded-lg border border-amber-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-amber-900">Akses Edit Transaksi</p>
+                        <p class="text-[11px] text-amber-700">Mengubah data transaksi yang ada</p>
+                    </div>
+                    <input type="checkbox" id="perm-edit-trx" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+
+                <div class="p-3 bg-red-50/60 rounded-lg border border-red-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-red-900">Akses Delete Transaksi</p>
+                        <p class="text-[11px] text-red-700">Menghapus data transaksi oli</p>
+                    </div>
+                    <input type="checkbox" id="perm-delete-trx" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+
+                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Akses Riwayat Data</p>
+                        <p class="text-[11px] text-slate-500">Melihat tabel data transaksi pengisian</p>
+                    </div>
+                    <input type="checkbox" id="perm-view-history" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+
+                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Export Data</p>
+                        <p class="text-[11px] text-slate-500">Mengunduh laporan dalam format CSV/Excel</p>
+                    </div>
+                    <input type="checkbox" id="perm-export-data" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+
+                <div class="p-3 bg-purple-50/60 rounded-lg border border-purple-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-purple-900">Kelola User System</p>
+                        <p class="text-[11px] text-purple-700">Menambah user & mengatur izin/role</p>
+                    </div>
+                    <input type="checkbox" id="perm-manage-users" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+
+                <div class="p-3 bg-blue-50/60 rounded-lg border border-blue-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-blue-900">Melihat Riwayat Aktivitas</p>
+                        <p class="text-[11px] text-blue-700">Melihat log audit & rekam jejak pengguna</p>
+                    </div>
+                    <input type="checkbox" id="perm-view-activity-logs" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                </div>
+            </div>
+
+            <div class="pt-4 mt-4 border-t border-slate-200 flex justify-end gap-3">
+                <button onclick="closePermissionsModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold text-xs transition-all">Batal</button>
+                <button onclick="saveUserPermissions()" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-semibold text-xs shadow-md transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan Hak Akses
+                </button>
+            </div>
         </div>
     </div>
 
@@ -67,7 +231,7 @@
         <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-slate-100">
             <div class="text-center mb-8">
                 <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/30">
-                    <i class="fa-solid me-0 fa-oil-can text-3xl text-white"></i>
+                    <i class="fa-solid fa-oil-can text-3xl text-white"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-slate-800">Oil Tracking System</h1>
                 <p class="text-sm text-slate-500 mt-1">Sistem Input & Monitoring Pemakaian Oli Unit</p>
@@ -101,15 +265,6 @@
                     <span>Masuk ke Sistem</span>
                 </button>
             </form>
-
-            <div class="mt-6 pt-5 border-t border-slate-100 text-center">
-                <p class="text-xs text-slate-500">Akses Utama Administrator:</p>
-                <div class="inline-flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-md mt-2 text-xs font-mono text-slate-700 border border-slate-200">
-                    <span>User: <strong>admin</strong></span>
-                    <span>|</span>
-                    <span>Pass: <strong>admin123</strong></span>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -131,26 +286,17 @@
                     </div>
 
                     <!-- Navigation Tabs -->
-                    <nav class="hidden md:flex items-center space-x-1">
-                        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 text-amber-400 bg-slate-800">
-                            <i class="fa-solid fa-chart-line"></i> Dashboard Grafik
-                        </button>
-                        <button onclick="switchTab('input')" id="nav-input" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
-                            <i class="fa-solid fa-pen-to-square"></i> Input Transaksi
-                        </button>
-                        <button onclick="switchTab('history')" id="nav-history" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
-                            <i class="fa-solid fa-database"></i> Riwayat Data
-                        </button>
-                        <button onclick="switchTab('users')" id="nav-users" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
-                            <i class="fa-solid fa-users-gear"></i> Kelola User
-                        </button>
+                    <nav class="hidden md:flex items-center space-x-1" id="desktop-nav-container">
+                        <!-- Dynamic desktop nav items -->
                     </nav>
 
                     <!-- User Profile & Logout -->
                     <div class="flex items-center gap-4">
                         <div class="text-right hidden sm:block">
-                            <p id="user-display-name" class="text-sm font-semibold text-slate-100">Administrator</p>
-                            <p id="user-display-role" class="text-xs text-amber-400 font-medium">Role: Admin</p>
+                            <p id="user-display-name" class="text-sm font-semibold text-slate-100">-</p>
+                            <div class="flex items-center gap-1.5 justify-end">
+                                <span id="user-display-role" class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-semibold border border-amber-500/30">Role: -</span>
+                            </div>
                         </div>
                         <button onclick="handleLogout()" title="Keluar" class="p-2 rounded-lg bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white transition-all">
                             <i class="fa-solid fa-right-from-bracket"></i>
@@ -160,19 +306,8 @@
             </div>
 
             <!-- Mobile Navigation Bar -->
-            <div class="md:hidden bg-slate-800 border-t border-slate-700 px-2 py-2 flex justify-around">
-                <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="p-2 text-xs font-medium flex flex-col items-center gap-1 text-amber-400">
-                    <i class="fa-solid fa-chart-line text-base"></i> Grafik
-                </button>
-                <button onclick="switchTab('input')" id="mob-nav-input" class="p-2 text-xs font-medium flex flex-col items-center gap-1 text-slate-400">
-                    <i class="fa-solid fa-pen-to-square text-base"></i> Input
-                </button>
-                <button onclick="switchTab('history')" id="mob-nav-history" class="p-2 text-xs font-medium flex flex-col items-center gap-1 text-slate-400">
-                    <i class="fa-solid fa-database text-base"></i> Riwayat
-                </button>
-                <button onclick="switchTab('users')" id="mob-nav-users" class="p-2 text-xs font-medium flex flex-col items-center gap-1 text-slate-400">
-                    <i class="fa-solid fa-users-gear text-base"></i> User
-                </button>
+            <div class="md:hidden bg-slate-800 border-t border-slate-700 px-2 py-2 flex justify-around" id="mobile-nav-container">
+                <!-- Dynamic mobile nav items -->
             </div>
         </header>
 
@@ -180,6 +315,21 @@
 
             <!-- 1. DASHBOARD VIEW -->
             <section id="view-dashboard" class="tab-content space-y-6">
+                <!-- Welcome Banner Tailored to Role -->
+                <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-amber-950 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-amber-500 text-slate-900 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase" id="dash-banner-role">Role</span>
+                            <span class="text-slate-300 text-xs" id="dash-banner-time">Sistem Aktif</span>
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-bold" id="dash-welcome-text">Selamat Datang</h2>
+                        <p class="text-slate-300 text-xs sm:text-sm mt-1" id="dash-welcome-desc">Berikut ringkasan statistik dan konsumsi pemakaian oli sesuai hak akses akun Anda.</p>
+                    </div>
+                    <div class="flex gap-2 flex-wrap" id="dash-quick-actions">
+                        <!-- Dynamic Quick Action Buttons -->
+                    </div>
+                </div>
+
                 <!-- Filter Section -->
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -280,7 +430,6 @@
 
                 <!-- Charts Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Trend Pemakaian Oli (Line Chart) -->
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2">
@@ -293,7 +442,6 @@
                         </div>
                     </div>
 
-                    <!-- Breakdown per Jenis Oil (Doughnut Chart) -->
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2">
@@ -306,7 +454,6 @@
                         </div>
                     </div>
 
-                    <!-- Breakdown per Component (Bar Chart) -->
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2">
@@ -319,7 +466,6 @@
                         </div>
                     </div>
 
-                    <!-- Top 10 Pemakaian per Code Unit (Horizontal Bar) -->
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2">
@@ -352,25 +498,21 @@
                     <form id="oil-input-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                            <!-- Code Unit -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Code Unit <span class="text-red-500">*</span></label>
                                 <input type="text" id="input-code-unit" required placeholder="Contoh: DT-101, EX-202" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none uppercase">
                             </div>
 
-                            <!-- Tanggal -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Tanggal Pengisian <span class="text-red-500">*</span></label>
                                 <input type="date" id="input-tanggal" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
 
-                            <!-- Jumlah Oil -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Jumlah Oil (Liter/Kg) <span class="text-red-500">*</span></label>
                                 <input type="number" step="0.1" min="0.1" id="input-jumlah-oil" required placeholder="0.0" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
 
-                            <!-- Jenis Oil (Dropdown) -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Jenis Oil <span class="text-red-500">*</span></label>
                                 <select id="input-jenis-oil" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -378,7 +520,6 @@
                                 </select>
                             </div>
 
-                            <!-- Type Oil (Dropdown) -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Type Oil <span class="text-red-500">*</span></label>
                                 <select id="input-type-oil" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -386,7 +527,6 @@
                                 </select>
                             </div>
 
-                            <!-- Component (Dropdown) -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Component <span class="text-red-500">*</span></label>
                                 <select id="input-component" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -394,7 +534,6 @@
                                 </select>
                             </div>
 
-                            <!-- Jenis Pengisian (Dropdown) -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Jenis Pengisian <span class="text-red-500">*</span></label>
                                 <select id="input-jenis-pengisian" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -402,7 +541,6 @@
                                 </select>
                             </div>
 
-                            <!-- Shift (Dropdown DS/NS) -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Shift <span class="text-red-500">*</span></label>
                                 <select id="input-shift" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -412,19 +550,16 @@
                                 </select>
                             </div>
 
-                            <!-- Station -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Station <span class="text-red-500">*</span></label>
                                 <input type="text" id="input-station" required placeholder="Contoh: Workshop Bay 1, Pitstop A" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
 
-                            <!-- Manpower Station -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Manpower Station / Mekanik <span class="text-red-500">*</span></label>
                                 <input type="text" id="input-manpower" required placeholder="Nama / Mekanik Penanggung Jawab" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
 
-                            <!-- Problem (Span 2) -->
                             <div class="md:col-span-2">
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Problem / Catatan Kerusakan</label>
                                 <input type="text" id="input-problem" placeholder="Deskripsikan problem (misal: Kebocoran Hose, Scheduled Service, dll)" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -457,7 +592,7 @@
                         </div>
 
                         <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-                            <button onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2">
+                            <button id="btn-export-csv" onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2">
                                 <i class="fa-solid fa-file-excel"></i> Export Excel/CSV
                             </button>
                         </div>
@@ -503,9 +638,9 @@
                     <!-- Form Tambah User -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                         <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
-                            <i class="fa-solid fa-user-plus text-amber-500"></i> Tambah Karyawan / User
+                            <i class="fa-solid fa-user-plus text-amber-500"></i> Tambah User Baru
                         </h3>
-                        <p class="text-xs text-slate-500 mb-5">Hanya Admin yang dapat menambah & mengubah status user.</p>
+                        <p class="text-xs text-slate-500 mb-5">Admin dapat mendaftarkan user dan menentukan hak akses spesifik.</p>
 
                         <form id="add-user-form" onsubmit="handleAddUser(event)" class="space-y-4">
                             <div>
@@ -524,10 +659,12 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Role / Peran</label>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Role Utama</label>
                                 <select id="new-user-role" required class="w-full text-sm rounded-lg border-slate-300 border p-2.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                     <option value="Operator">Operator Input</option>
+                                    <option value="Supervisor">Supervisor / Leader</option>
                                     <option value="Admin">Administrator System</option>
+                                    <option value="Viewer">Viewer (Read Only)</option>
                                 </select>
                             </div>
 
@@ -540,9 +677,12 @@
                     <!-- List User Table -->
                     <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                                <i class="fa-solid fa-users text-amber-500"></i> Daftar User Terdaftar
-                            </h3>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                                    <i class="fa-solid fa-users text-amber-500"></i> Kelola Hak Akses & Status User
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Klik tombol Hak Akses untuk menyesuaikan permission individual.</p>
+                            </div>
                             <span class="text-xs bg-slate-100 px-2.5 py-1 rounded-full font-medium text-slate-600" id="user-count-badge">0 Users</span>
                         </div>
 
@@ -554,7 +694,7 @@
                                         <th class="py-3 px-4">Username</th>
                                         <th class="py-3 px-4">Role</th>
                                         <th class="py-3 px-4">Status</th>
-                                        <th class="py-3 px-4 text-center">Aksi Status</th>
+                                        <th class="py-3 px-4 text-center">Hak Akses & Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="users-table-body" class="divide-y divide-slate-200">
@@ -564,6 +704,60 @@
                         </div>
                     </div>
 
+                </div>
+            </section>
+
+            <!-- 5. ACTIVITY LOG VIEW -->
+            <section id="view-activity-logs" class="tab-content hidden space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-5 border-b border-slate-200 bg-slate-900 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Riwayat Aktivitas System (Audit Trail)
+                            </h2>
+                            <p class="text-xs text-slate-300 mt-1">Merekam jejak login, penginputan, perubahan data, dan aktivitas user.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs bg-slate-800 text-amber-400 px-3 py-1.5 rounded-lg border border-slate-700 font-mono" id="log-count-badge">0 Total Activity</span>
+                        </div>
+                    </div>
+
+                    <!-- Log Filter Bar -->
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row gap-3 items-center justify-between">
+                        <div class="relative w-full md:w-80">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </span>
+                            <input type="text" id="activity-search" onkeyup="filterActivityTable()" placeholder="Cari user, aksi, atau detail..." class="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <select id="activity-type-filter" onchange="filterActivityTable()" class="text-xs rounded-lg border border-slate-300 p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                                <option value="ALL">Semua Jenis Aktivitas</option>
+                                <option value="create">Input Transaksi</option>
+                                <option value="update">Edit Transaksi</option>
+                                <option value="delete">Hapus Transaksi</option>
+                                <option value="user">Kelola User / Akses</option>
+                                <option value="auth">Aktivitas Login</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Activity Log Table -->
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-xs text-slate-600">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+                                <tr>
+                                    <th class="py-3 px-4">Waktu</th>
+                                    <th class="py-3 px-4">Pengguna</th>
+                                    <th class="py-3 px-4">Kategori Aksi</th>
+                                    <th class="py-3 px-4">Deskripsi Aktivitas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-table-body" class="divide-y divide-slate-200 bg-white">
+                                <!-- Dynamic Activity Log Rows -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -592,10 +786,65 @@
             "Greasing Point", "Steering System", "Brake System", "General / Unit Body"
         ];
 
+        // DEFAULT FULL PERMISSIONS TEMPLATE
+        const FULL_PERMISSIONS = {
+            view_dashboard: true,
+            input_trx: true,
+            edit_trx: true,
+            delete_trx: true,
+            view_history: true,
+            manage_users: true,
+            view_activity_logs: true,
+            export_data: true
+        };
+
         // INITIAL USERS STATE
         let users = [
-            { id: 1, fullname: "Administrator Utama", username: "admin", password: "admin123", role: "Admin", status: "Aktif" },
-            { id: 2, fullname: "Budi Santoso", username: "operator1", password: "operator123", role: "Operator", status: "Aktif" }
+            { 
+                id: 1, 
+                fullname: "Administrator System", 
+                username: "admin", 
+                password: "admin123", 
+                role: "Admin", 
+                status: "Aktif",
+                permissions: { ...FULL_PERMISSIONS }
+            },
+            { 
+                id: 2, 
+                fullname: "Budi Santoso", 
+                username: "operator1", 
+                password: "operator123", 
+                role: "Operator", 
+                status: "Aktif",
+                permissions: {
+                    view_dashboard: true,
+                    input_trx: true,
+                    edit_trx: false,
+                    delete_trx: false,
+                    view_history: true,
+                    manage_users: false,
+                    view_activity_logs: false,
+                    export_data: true
+                }
+            },
+            { 
+                id: 3, 
+                fullname: "Hendra Wijaya", 
+                username: "supervisor", 
+                password: "super123", 
+                role: "Supervisor", 
+                status: "Aktif",
+                permissions: {
+                    view_dashboard: true,
+                    input_trx: true,
+                    edit_trx: true,
+                    delete_trx: false,
+                    view_history: true,
+                    manage_users: false,
+                    view_activity_logs: true,
+                    export_data: true
+                }
+            }
         ];
 
         // INITIAL MOCK OIL LOGS
@@ -608,6 +857,13 @@
             { id: 6, codeUnit: "EX-205", tanggal: "2026-08-06", jumlah: 12.0, jenisOil: "Coolant", typeOil: "SEIKEN COOLANT 50%", component: "Radiator / Cooling", jenisPengisian: "TOP UP", shift: "DS", station: "Workshop Bay 1", manpower: "Rudi Hartono", problem: "Low coolant warning" },
             { id: 7, codeUnit: "DT-101", tanggal: "2026-08-07", jumlah: 30.0, jenisOil: "Engine Oil", typeOil: "15W40-DH1/D209Z", component: "Engine", jenisPengisian: "PS3", shift: "NS", station: "Workshop Bay 2", manpower: "Agus Pratama", problem: "Periodic Service 500 Hours" },
             { id: 8, codeUnit: "DZ-302", tanggal: "2026-08-08", jumlah: 45.0, jenisOil: "Oil Power Train (UT)", typeOil: "T0-10-CF/D209Z", component: "Steering System", jenisPengisian: "COMMISSIONING", shift: "DS", station: "Workshop Bay 4", manpower: "Bambang", problem: "Post overhaul steering" }
+        ];
+
+        // ACTIVITY LOGS DATA
+        let activityLogs = [
+            { id: 101, timestamp: "2026-08-09 08:00:12", user: "Administrator System", username: "admin", action: "Login System", details: "Berhasil masuk ke dalam sistem", type: "auth" },
+            { id: 102, timestamp: "2026-08-09 08:15:45", user: "Budi Santoso", username: "operator1", action: "Input Transaksi", details: "Menambahkan transaksi oli DT-101 (25 L)", type: "create" },
+            { id: 103, timestamp: "2026-08-09 09:02:10", user: "Hendra Wijaya", username: "supervisor", action: "Edit Transaksi", details: "Mengubah data transaksi EX-205 (150 L)", type: "update" }
         ];
 
         let currentUser = null;
@@ -623,31 +879,45 @@
             initializeDefaultDates();
         };
 
+        function getFormattedTimestamp() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        function logActivity(action, details, type = 'create') {
+            if (!currentUser) return;
+            const newLog = {
+                id: Date.now(),
+                timestamp: getFormattedTimestamp(),
+                user: currentUser.fullname,
+                username: currentUser.username,
+                action: action,
+                details: details,
+                type: type
+            };
+            activityLogs.unshift(newLog);
+            renderActivityLogsTable();
+        }
+
         function populateDropdownOptions() {
-            // Populate Input Form Dropdowns
-            const jenisPengisianSelect = document.getElementById('input-jenis-pengisian');
-            DROPDOWN_JENIS_PENGISIAN.forEach(item => {
-                jenisPengisianSelect.add(new Option(item, item));
-            });
+            const populateSelects = (selectIds, options) => {
+                selectIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    options.forEach(item => el.add(new Option(item, item)));
+                });
+            };
 
-            const jenisOilSelect = document.getElementById('input-jenis-oil');
-            const filterJenisOilSelect = document.getElementById('filter-jenis-oil');
-            DROPDOWN_JENIS_OIL.forEach(item => {
-                jenisOilSelect.add(new Option(item, item));
-                filterJenisOilSelect.add(new Option(item, item));
-            });
-
-            const typeOilSelect = document.getElementById('input-type-oil');
-            DROPDOWN_OIL_TYPE.forEach(item => {
-                typeOilSelect.add(new Option(item, item));
-            });
-
-            const componentSelect = document.getElementById('input-component');
-            const filterComponentSelect = document.getElementById('filter-component');
-            DROPDOWN_COMPONENTS.forEach(item => {
-                componentSelect.add(new Option(item, item));
-                filterComponentSelect.add(new Option(item, item));
-            });
+            populateSelects(['input-jenis-pengisian', 'edit-jenis-pengisian'], DROPDOWN_JENIS_PENGISIAN);
+            populateSelects(['input-jenis-oil', 'filter-jenis-oil', 'edit-jenis-oil'], DROPDOWN_JENIS_OIL);
+            populateSelects(['input-type-oil', 'edit-type-oil'], DROPDOWN_OIL_TYPE);
+            populateSelects(['input-component', 'filter-component', 'edit-component'], DROPDOWN_COMPONENTS);
         }
 
         function populateUnitFilterDropdown() {
@@ -655,7 +925,6 @@
             const currentVal = filterUnitSelect.value;
             filterUnitSelect.innerHTML = '<option value="ALL">Semua Unit</option>';
             
-            // Extract unique units from oilLogs
             const uniqueUnits = [...new Set(oilLogs.map(item => item.codeUnit.toUpperCase()))].sort();
             uniqueUnits.forEach(unit => {
                 filterUnitSelect.add(new Option(unit, unit));
@@ -667,11 +936,10 @@
         }
 
         function initializeDefaultDates() {
-            // Default current date for input form
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('input-tanggal').value = today;
+            const inputTanggal = document.getElementById('input-tanggal');
+            if (inputTanggal) inputTanggal.value = today;
 
-            // Cut off start & end date defaults (e.g., current month)
             const date = new Date();
             const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
             const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
@@ -693,7 +961,7 @@
             }
 
             if (foundUser.status !== "Aktif") {
-                showToast("Akun Anda dinonaktifkan oleh Admin. Hubungi Admin!", "error");
+                showToast("Akun Anda dinonaktifkan. Hubungi Administrator!", "error");
                 return;
             }
 
@@ -704,16 +972,33 @@
             document.getElementById('user-display-name').innerText = currentUser.fullname;
             document.getElementById('user-display-role').innerText = `Role: ${currentUser.role}`;
 
+            logActivity("Login System", `User ${currentUser.fullname} (${currentUser.username}) berhasil masuk`, "auth");
             showToast(`Selamat datang kembali, ${currentUser.fullname}!`, "success");
 
-            // Initialize App Views
+            buildDynamicNav();
             populateUnitFilterDropdown();
-            switchTab('dashboard');
             renderHistoryTable();
             renderUsersTable();
+            renderActivityLogsTable();
+
+            // Default view selection based on allowed permissions
+            if (currentUser.permissions.view_dashboard) {
+                switchTab('dashboard');
+            } else if (currentUser.permissions.input_trx) {
+                switchTab('input');
+            } else if (currentUser.permissions.view_history) {
+                switchTab('history');
+            } else if (currentUser.permissions.view_activity_logs) {
+                switchTab('activity-logs');
+            } else if (currentUser.permissions.manage_users) {
+                switchTab('users');
+            }
         }
 
         function handleLogout() {
+            if (currentUser) {
+                logActivity("Logout System", `User ${currentUser.fullname} keluar dari sistem`, "auth");
+            }
             currentUser = null;
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-section').classList.remove('hidden');
@@ -721,12 +1006,60 @@
             showToast("Berhasil logout dari sistem.", "info");
         }
 
+        function buildDynamicNav() {
+            const desktopNav = document.getElementById('desktop-nav-container');
+            const mobileNav = document.getElementById('mobile-nav-container');
+
+            const navItems = [
+                { key: 'dashboard', perm: 'view_dashboard', label: 'Dashboard Grafik', icon: 'fa-chart-line' },
+                { key: 'input', perm: 'input_trx', label: 'Input Transaksi', icon: 'fa-pen-to-square' },
+                { key: 'history', perm: 'view_history', label: 'Riwayat Data', icon: 'fa-database' },
+                { key: 'activity-logs', perm: 'view_activity_logs', label: 'Riwayat Aktivitas', icon: 'fa-clock-rotate-left' },
+                { key: 'users', perm: 'manage_users', label: 'Kelola User', icon: 'fa-users-gear' }
+            ];
+
+            let desktopHTML = '';
+            let mobileHTML = '';
+
+            navItems.forEach(item => {
+                if (currentUser.permissions[item.perm]) {
+                    desktopHTML += `
+                        <button onclick="switchTab('${item.key}')" id="nav-${item.key}" class="nav-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+                            <i class="fa-solid ${item.icon}"></i> ${item.label}
+                        </button>
+                    `;
+                    mobileHTML += `
+                        <button onclick="switchTab('${item.key}')" id="mob-nav-${item.key}" class="p-2 text-xs font-medium flex flex-col items-center gap-1 text-slate-400">
+                            <i class="fa-solid ${item.icon} text-base"></i> ${item.label.split(' ')[0]}
+                        </button>
+                    `;
+                }
+            });
+
+            desktopNav.innerHTML = desktopHTML;
+            mobileNav.innerHTML = mobileHTML;
+        }
+
         // NAVIGATION TABS SWITCHER
         function switchTab(tabName) {
+            // Permission Guard Check
+            const tabPermMap = {
+                'dashboard': 'view_dashboard',
+                'input': 'input_trx',
+                'history': 'view_history',
+                'activity-logs': 'view_activity_logs',
+                'users': 'manage_users'
+            };
+
+            if (currentUser && !currentUser.permissions[tabPermMap[tabName]]) {
+                showToast("Anda tidak memiliki hak akses untuk membuka halaman ini!", "error");
+                return;
+            }
+
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`view-${tabName}`).classList.remove('hidden');
 
-            // Style Active Desktop Buttons
+            // Style Desktop Navigation Buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('text-amber-400', 'bg-slate-800');
                 btn.classList.add('text-slate-300');
@@ -737,9 +1070,8 @@
                 activeDesktop.classList.remove('text-slate-300');
             }
 
-            // Style Active Mobile Buttons
-            const mobBtns = ['dashboard', 'input', 'history', 'users'];
-            mobBtns.forEach(b => {
+            // Style Mobile Navigation Buttons
+            ['dashboard', 'input', 'history', 'activity-logs', 'users'].forEach(b => {
                 const mobEl = document.getElementById(`mob-nav-${b}`);
                 if (mobEl) {
                     mobEl.classList.remove('text-amber-400');
@@ -784,13 +1116,25 @@
         }
 
         function renderDashboard() {
+            // Customize Welcome Banner per Role
+            document.getElementById('dash-banner-role').innerText = `Role: ${currentUser.role}`;
+            document.getElementById('dash-welcome-text').innerText = `Selamat Datang, ${currentUser.fullname}!`;
+            
+            const quickActionsContainer = document.getElementById('dash-quick-actions');
+            let actionsHTML = '';
+            if (currentUser.permissions.input_trx) {
+                actionsHTML += `<button onclick="switchTab('input')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold text-xs rounded-lg transition-all"><i class="fa-solid fa-plus mr-1"></i> Input Baru</button>`;
+            }
+            if (currentUser.permissions.view_history) {
+                actionsHTML += `<button onclick="switchTab('history')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs rounded-lg transition-all"><i class="fa-solid fa-database mr-1"></i> Lihat Data</button>`;
+            }
+            quickActionsContainer.innerHTML = actionsHTML;
+
             const data = getFilteredData();
 
-            // Calculate KPIs
             const totalVolume = data.reduce((sum, item) => sum + parseFloat(item.jumlah || 0), 0);
             const totalTrx = data.length;
 
-            // Unit with highest consumption
             const unitAgg = {};
             const oilAgg = {};
             const componentAgg = {};
@@ -804,7 +1148,6 @@
                 dateAgg[item.tanggal] = (dateAgg[item.tanggal] || 0) + vol;
             });
 
-            // Find Top Unit
             let topUnit = "-";
             let topUnitVal = 0;
             Object.keys(unitAgg).forEach(u => {
@@ -814,7 +1157,6 @@
                 }
             });
 
-            // Find Top Oil
             let topOil = "-";
             let topOilVal = 0;
             Object.keys(oilAgg).forEach(o => {
@@ -824,7 +1166,6 @@
                 }
             });
 
-            // Update KPI DOM
             document.getElementById('kpi-total-volume').innerText = `${totalVolume.toLocaleString('id-ID')} L`;
             document.getElementById('kpi-total-trx').innerText = `${totalTrx} Transaksi`;
             document.getElementById('kpi-top-unit').innerText = topUnit;
@@ -832,7 +1173,6 @@
             document.getElementById('kpi-top-oil').innerText = topOil;
             document.getElementById('kpi-top-oil-val').innerText = `${topOilVal.toLocaleString('id-ID')} Liter`;
 
-            // Render Charts
             renderChartTrend(dateAgg);
             renderChartJenisOil(oilAgg);
             renderChartComponent(componentAgg);
@@ -964,6 +1304,11 @@
         function handleFormSubmit(e) {
             e.preventDefault();
 
+            if (!currentUser.permissions.input_trx) {
+                showToast("Anda tidak memiliki akses untuk menambah transaksi!", "error");
+                return;
+            }
+
             const newLog = {
                 id: Date.now(),
                 codeUnit: document.getElementById('input-code-unit').value.trim().toUpperCase(),
@@ -979,8 +1324,9 @@
                 problem: document.getElementById('input-problem').value.trim() || '-'
             };
 
-            oilLogs.unshift(newLog); // Add to top
+            oilLogs.unshift(newLog);
 
+            logActivity("Input Transaksi", `Menambahkan transaksi ${newLog.codeUnit} (${newLog.jumlah} L - ${newLog.jenisOil})`, "create");
             populateUnitFilterDropdown();
             renderHistoryTable();
             resetForm();
@@ -998,6 +1344,16 @@
             const tbody = document.getElementById('history-table-body');
             tbody.innerHTML = '';
 
+            // Handle Export CSV Permission Visibility
+            const btnExport = document.getElementById('btn-export-csv');
+            if (btnExport) {
+                if (currentUser && currentUser.permissions.export_data) {
+                    btnExport.classList.remove('hidden');
+                } else {
+                    btnExport.classList.add('hidden');
+                }
+            }
+
             if (dataToRender.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 text-slate-400">Tidak ada data transaksi pengisian oli ditemukan.</td></tr>`;
                 document.getElementById('table-info').innerText = 'Menampilkan 0 data';
@@ -1007,6 +1363,30 @@
             dataToRender.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100";
+
+                // Action Buttons guarded by Permissions
+                let actions = [];
+                
+                if (currentUser && currentUser.permissions.edit_trx) {
+                    actions.push(`
+                        <button onclick="openEditModal(${item.id})" title="Edit Data" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded transition-all">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                    `);
+                }
+
+                if (currentUser && currentUser.permissions.delete_trx) {
+                    actions.push(`
+                        <button onclick="confirmDeleteLog(${item.id})" title="Hapus Data" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded transition-all">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `);
+                }
+
+                const actionHTML = actions.length > 0 
+                    ? `<div class="flex items-center justify-center gap-1">${actions.join('')}</div>`
+                    : `<span class="text-[10px] text-slate-400 font-normal">Tidak ada izin</span>`;
+
                 tr.innerHTML = `
                     <td class="py-3 px-4 font-mono text-slate-400">${index + 1}</td>
                     <td class="py-3 px-4 font-bold text-slate-800">${item.codeUnit}</td>
@@ -1020,11 +1400,7 @@
                     <td class="py-3 px-4">${item.station}</td>
                     <td class="py-3 px-4">${item.manpower}</td>
                     <td class="py-3 px-4 text-slate-500 max-w-xs truncate" title="${item.problem}">${item.problem}</td>
-                    <td class="py-3 px-4 text-center">
-                        <button onclick="confirmDeleteLog(${item.id})" title="Hapus Data" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded transition-all">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </td>
+                    <td class="py-3 px-4 text-center">${actionHTML}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1045,12 +1421,93 @@
             renderHistoryTable(filtered);
         }
 
+        /* Edit Modal Functions */
+        function openEditModal(id) {
+            if (!currentUser.permissions.edit_trx) {
+                showToast("Anda tidak memiliki hak akses untuk mengedit data!", "error");
+                return;
+            }
+
+            const item = oilLogs.find(x => x.id === id);
+            if (!item) return;
+
+            document.getElementById('edit-id').value = item.id;
+            document.getElementById('edit-code-unit').value = item.codeUnit;
+            document.getElementById('edit-tanggal').value = item.tanggal;
+            document.getElementById('edit-jumlah-oil').value = item.jumlah;
+            document.getElementById('edit-jenis-oil').value = item.jenisOil;
+            document.getElementById('edit-type-oil').value = item.typeOil;
+            document.getElementById('edit-component').value = item.component;
+            document.getElementById('edit-jenis-pengisian').value = item.jenisPengisian;
+            document.getElementById('edit-shift').value = item.shift;
+            document.getElementById('edit-station').value = item.station;
+            document.getElementById('edit-manpower').value = item.manpower;
+            document.getElementById('edit-problem').value = item.problem;
+
+            document.getElementById('edit-trx-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-trx-modal').classList.add('hidden');
+        }
+
+        function handleEditFormSubmit(e) {
+            e.preventDefault();
+
+            if (!currentUser.permissions.edit_trx) {
+                showToast("Akses ditolak!", "error");
+                return;
+            }
+
+            const id = parseInt(document.getElementById('edit-id').value);
+            const index = oilLogs.findIndex(x => x.id === id);
+            if (index === -1) return;
+
+            const oldRecord = oilLogs[index];
+
+            oilLogs[index] = {
+                id: id,
+                codeUnit: document.getElementById('edit-code-unit').value.trim().toUpperCase(),
+                tanggal: document.getElementById('edit-tanggal').value,
+                jumlah: parseFloat(document.getElementById('edit-jumlah-oil').value),
+                jenisOil: document.getElementById('edit-jenis-oil').value,
+                typeOil: document.getElementById('edit-type-oil').value,
+                component: document.getElementById('edit-component').value,
+                jenisPengisian: document.getElementById('edit-jenis-pengisian').value,
+                shift: document.getElementById('edit-shift').value,
+                station: document.getElementById('edit-station').value.trim(),
+                manpower: document.getElementById('edit-manpower').value.trim(),
+                problem: document.getElementById('edit-problem').value.trim() || '-'
+            };
+
+            logActivity("Edit Transaksi", `Perubahan data transaksi ${oldRecord.codeUnit} (${oldRecord.jumlah}L -> ${oilLogs[index].jumlah}L)`, "update");
+
+            closeEditModal();
+            populateUnitFilterDropdown();
+            renderHistoryTable();
+            if (!document.getElementById('view-dashboard').classList.contains('hidden')) {
+                renderDashboard();
+            }
+
+            showToast("Data transaksi berhasil diperbarui!", "success");
+        }
+
         function confirmDeleteLog(id) {
+            if (!currentUser.permissions.delete_trx) {
+                showToast("Anda tidak memiliki hak akses untuk menghapus data!", "error");
+                return;
+            }
+
+            const item = oilLogs.find(i => i.id === id);
+            if (!item) return;
+
             showModal(
                 "Konfirmasi Hapus Data",
-                "Apakah Anda yakin ingin menghapus data transaksi pengisian oli ini?",
+                `Apakah Anda yakin ingin menghapus data transaksi pengisian oli unit ${item.codeUnit} (${item.jumlah} L)?`,
                 () => {
                     oilLogs = oilLogs.filter(i => i.id !== id);
+                    logActivity("Hapus Transaksi", `Menghapus transaksi unit ${item.codeUnit} (${item.jumlah} L - ${item.jenisOil})`, "delete");
+
                     populateUnitFilterDropdown();
                     renderHistoryTable();
                     if (!document.getElementById('view-dashboard').classList.contains('hidden')) {
@@ -1076,23 +1533,32 @@
                     ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">Aktif</span>`
                     : `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-100 text-red-800">Non-Aktif</span>`;
 
-                const roleBadge = user.role === "Admin"
-                    ? `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800">Admin</span>`
-                    : `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">Operator</span>`;
+                const roleBadgeMap = {
+                    'Admin': 'bg-purple-100 text-purple-800',
+                    'Supervisor': 'bg-blue-100 text-blue-800',
+                    'Operator': 'bg-slate-100 text-slate-800',
+                    'Viewer': 'bg-amber-100 text-amber-800'
+                };
 
-                // Non-admin or deleting current admin protection
-                const toggleBtn = currentUser && currentUser.role === 'Admin'
-                    ? `<button onclick="toggleUserStatus(${user.id})" class="text-xs px-2.5 py-1 rounded border ${isAktif ? 'border-red-300 text-red-600 hover:bg-red-50' : 'border-emerald-300 text-emerald-600 hover:bg-emerald-50'} transition-all font-medium">
-                        ${isAktif ? 'Non-aktifkan' : 'Aktifkan'}
-                       </button>`
-                    : `<span class="text-xs text-slate-400">Tidak ada akses</span>`;
+                const roleBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-semibold ${roleBadgeMap[user.role] || 'bg-slate-100 text-slate-700'}">${user.role}</span>`;
+
+                const actionBtns = `
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="openPermissionsModal(${user.id})" class="px-2 py-1 bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 text-[11px] font-semibold rounded transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-key"></i> Hak Akses
+                        </button>
+                        <button onclick="toggleUserStatus(${user.id})" class="px-2 py-1 rounded border text-[11px] font-semibold transition-all ${isAktif ? 'border-red-200 text-red-600 hover:bg-red-50' : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'}">
+                            ${isAktif ? 'Non-aktifkan' : 'Aktifkan'}
+                        </button>
+                    </div>
+                `;
 
                 tr.innerHTML = `
                     <td class="py-3 px-4 font-semibold text-slate-800">${user.fullname}</td>
                     <td class="py-3 px-4 font-mono text-slate-600">${user.username}</td>
                     <td class="py-3 px-4">${roleBadge}</td>
                     <td class="py-3 px-4">${statusBadge}</td>
-                    <td class="py-3 px-4 text-center">${toggleBtn}</td>
+                    <td class="py-3 px-4 text-center">${actionBtns}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1101,8 +1567,8 @@
         function handleAddUser(e) {
             e.preventDefault();
 
-            if (currentUser && currentUser.role !== 'Admin') {
-                showToast("Hanya Admin yang diizinkan menambah user baru!", "error");
+            if (currentUser && !currentUser.permissions.manage_users) {
+                showToast("Hanya Admin / Pengelola yang diizinkan menambah user baru!", "error");
                 return;
             }
 
@@ -1111,10 +1577,19 @@
             const password = document.getElementById('new-user-password').value.trim();
             const role = document.getElementById('new-user-role').value;
 
-            // Check username existing
             if (users.some(u => u.username.toLowerCase() === username)) {
                 showToast("Username tersebut sudah digunakan!", "error");
                 return;
+            }
+
+            // Assign standard default permissions based on chosen role
+            let defaultPerms = { ...FULL_PERMISSIONS };
+            if (role === 'Operator') {
+                defaultPerms = { view_dashboard: true, input_trx: true, edit_trx: false, delete_trx: false, view_history: true, manage_users: false, view_activity_logs: false, export_data: true };
+            } else if (role === 'Supervisor') {
+                defaultPerms = { view_dashboard: true, input_trx: true, edit_trx: true, delete_trx: false, view_history: true, manage_users: false, view_activity_logs: true, export_data: true };
+            } else if (role === 'Viewer') {
+                defaultPerms = { view_dashboard: true, input_trx: false, edit_trx: false, delete_trx: false, view_history: true, manage_users: false, view_activity_logs: false, export_data: false };
             }
 
             const newUser = {
@@ -1123,10 +1598,13 @@
                 username,
                 password,
                 role,
-                status: "Aktif"
+                status: "Aktif",
+                permissions: defaultPerms
             };
 
             users.push(newUser);
+            logActivity("Tambah User", `Menambahkan user baru ${fullname} (${username}) dengan role ${role}`, "user");
+
             renderUsersTable();
             document.getElementById('add-user-form').reset();
             showToast(`User ${fullname} (${username}) berhasil ditambahkan!`, "success");
@@ -1142,12 +1620,119 @@
             }
 
             u.status = u.status === "Aktif" ? "Non-Aktif" : "Aktif";
+            logActivity("Ubah Status User", `Mengubah status user ${u.username} menjadi ${u.status}`, "user");
+
             renderUsersTable();
             showToast(`Status user ${u.username} diubah menjadi ${u.status}`, "info");
         }
 
-        // EXPORT TO CSV
+        /* Permissions Modal Controls */
+        function openPermissionsModal(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            document.getElementById('perm-user-id').value = user.id;
+            document.getElementById('perm-modal-user-title').innerText = `User: ${user.fullname} (@${user.username}) - Role: ${user.role}`;
+
+            const permKeys = ['view_dashboard', 'input_trx', 'edit_trx', 'delete_trx', 'view_history', 'manage_users', 'view_activity_logs', 'export_data'];
+            
+            permKeys.forEach(k => {
+                const chk = document.getElementById(`perm-${k.replace(/_/g, '-')}`);
+                if (chk) {
+                    chk.checked = !!user.permissions[k];
+                }
+            });
+
+            document.getElementById('permissions-modal').classList.remove('hidden');
+        }
+
+        function closePermissionsModal() {
+            document.getElementById('permissions-modal').classList.add('hidden');
+        }
+
+        function saveUserPermissions() {
+            const userId = parseInt(document.getElementById('perm-user-id').value);
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            const permKeys = ['view_dashboard', 'input_trx', 'edit_trx', 'delete_trx', 'view_history', 'manage_users', 'view_activity_logs', 'export_data'];
+
+            permKeys.forEach(k => {
+                const chk = document.getElementById(`perm-${k.replace(/_/g, '-')}`);
+                if (chk) {
+                    user.permissions[k] = chk.checked;
+                }
+            });
+
+            logActivity("Ubah Hak Akses", `Memperbarui hak akses permission untuk user ${user.username}`, "user");
+
+            // If current user updated their own permissions, rebuild nav
+            if (currentUser && currentUser.id === user.id) {
+                buildDynamicNav();
+            }
+
+            closePermissionsModal();
+            renderUsersTable();
+            showToast(`Hak akses untuk user ${user.username} berhasil diperbarui!`, "success");
+        }
+
+        function renderActivityLogsTable(dataToRender = activityLogs) {
+            const tbody = document.getElementById('activity-table-body');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            document.getElementById('log-count-badge').innerText = `${dataToRender.length} Total Activity`;
+
+            if (dataToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400">Tidak ada riwayat aktivitas ditemukan.</td></tr>`;
+                return;
+            }
+
+            const typeTagMap = {
+                'create': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">Tambah Data</span>',
+                'update': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800">Edit Data</span>',
+                'delete': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800">Hapus Data</span>',
+                'user': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800">Kelola User</span>',
+                'auth': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800">Autentikasi</span>'
+            };
+
+            dataToRender.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">${log.timestamp}</td>
+                    <td class="py-3 px-4">
+                        <div class="font-semibold text-slate-800">${log.user}</div>
+                        <div class="text-[10px] font-mono text-slate-400">@${log.username}</div>
+                    </td>
+                    <td class="py-3 px-4">${typeTagMap[log.type] || log.action}</td>
+                    <td class="py-3 px-4 text-slate-600">${log.details}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterActivityTable() {
+            const query = document.getElementById('activity-search').value.toLowerCase().trim();
+            const typeFilter = document.getElementById('activity-type-filter').value;
+
+            const filtered = activityLogs.filter(item => {
+                if (typeFilter !== 'ALL' && item.type !== typeFilter) return false;
+                return item.user.toLowerCase().includes(query) ||
+                       item.username.toLowerCase().includes(query) ||
+                       item.action.toLowerCase().includes(query) ||
+                       item.details.toLowerCase().includes(query);
+            });
+
+            renderActivityLogsTable(filtered);
+        }
+
         function exportToCSV() {
+            if (!currentUser.permissions.export_data) {
+                showToast("Anda tidak memiliki izin untuk mengunduh laporan!", "error");
+                return;
+            }
+
             if (oilLogs.length === 0) {
                 showToast("Tidak ada data untuk diexport!", "error");
                 return;
@@ -1181,6 +1766,7 @@
             link.click();
             document.body.removeChild(link);
 
+            logActivity("Export Data", "Mengunduh file laporan transaksi pengisian oli (CSV)", "create");
             showToast("File CSV berhasil diunduh!", "success");
         }
 
@@ -1227,7 +1813,7 @@
                     <p class="text-xs text-slate-500 mt-2">${bodyText}</p>
                     <div class="mt-6 flex justify-center gap-3">
                         <button id="modal-btn-cancel" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">Batal</button>
-                        <button id="modal-btn-confirm" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg">Ya, Hapus</button>
+                        <button id="modal-btn-confirm" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg">Ya, Lanjutkan</button>
                     </div>
                 </div>
             `;
