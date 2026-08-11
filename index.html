@@ -9,6 +9,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f59e0b'/%3E%3Cpath d='M32 10C32 10 18 28 18 39C18 46.7 24.3 53 32 53C39.7 53 46 46.7 46 39C46 28 32 10 32 10Z' fill='%230f172a'/%3E%3Ccircle cx='26' cy='36' r='3' fill='%23ffffff' opacity='0.7'/%3E%3C/svg%3E">
 
     <!-- Tailwind CSS -->
+    <!-- Library untuk membaca file Excel (.xlsx / .xls) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js for Dashboard Visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -200,6 +202,23 @@
                         <p class="text-xs font-bold text-slate-800">Export Data</p>
                         <p class="text-[11px] text-slate-500">Mengunduh laporan dalam format CSV/Excel</p>
                     </div>
+                    <!-- Fitur Import Data (Khusus Excel) -->
+<div class="p-3 bg-emerald-50/60 rounded-lg border border-emerald-200 flex items-center justify-between mt-3">
+  <div>
+    <p class="text-xs font-bold text-emerald-900">Import Data Excel</p>
+    <p class="text-[11px] text-emerald-700">Unggah file laporan lokal khusus format (.xlsx / .xls)</p>
+  </div>
+  <div>
+    <!-- Input File Tersembunyi Khusus Excel -->
+    <input type="file" id="import-excel-file" accept=".xlsx, .xls" class="hidden" onchange="handleImportExcel(event)">
+    
+    <!-- Tombol Trigger Upload -->
+    <button type="button" onclick="document.getElementById('import-excel-file').click()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-1.5 transition-all cursor-pointer">
+      <i class="fa-solid fa-file-excel"></i>
+      <span>Upload Excel</span>
+    </button>
+  </div>
+</div>
                     <input type="checkbox" id="perm-export-data" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
                 </div>
 
@@ -1844,6 +1863,65 @@
             logActivity("Export Data", "Mengunduh laporan data transaksi oli ke format CSV/Excel", "auth");
             showToast("Laporan berhasil di-export ke CSV!", "success");
         }
-    </script>
+    
+    function handleImportExcel(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Validasi khusus file Excel
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (ext !== 'xlsx' && ext !== 'xls') {
+    alert('File harus berformat Excel (.xlsx atau .xls)!');
+    event.target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rawData = XLSX.utils.sheet_to_json(firstSheet);
+
+      if (!rawData || rawData.length === 0) {
+        alert('File Excel kosong atau tidak terbaca!');
+        return;
+      }
+
+      // Pemetaan kolom Excel ke struktur data sistem
+      const importedList = rawData.map(row => ({
+        id: Date.now() + Math.random().toString(36).substring(2, 7),
+        tanggal: row['Tanggal'] || row['TANGGAL'] || new Date().toISOString().split('T')[0],
+        unit: row['Code Unit'] || row['UNIT'] || row['Unit'] || '-',
+        jenisOli: row['Jenis Oli'] || row['JENIS OLI'] || '-',
+        component: row['Component'] || row['COMPONENT'] || '-',
+        volume: Number(row['Volume'] || row['VOLUME'] || 0),
+        keterangan: row['Keterangan'] || row['PROBLEM'] || '-'
+      }));
+
+      // Masukkan data ke memori & LocalStorage
+      if (typeof oilTransactions !== 'undefined') {
+        oilTransactions.push(...importedList);
+        localStorage.setItem('oilTransactions', JSON.stringify(oilTransactions));
+        
+        // Refresh tabel / tampilan jika ada fungsinya
+        if (typeof renderDashboard === 'function') renderDashboard();
+        if (typeof renderHistoryTable === 'function') renderHistoryTable();
+
+        alert(`Berhasil mengimpor ${importedList.length} baris data dari file Excel!`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Gagal membaca isi file Excel. Pastikan format tabel sesuai.');
+    } finally {
+      event.target.value = ''; // Reset input file
+    }
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+        </script>
 </body>
 </html>
