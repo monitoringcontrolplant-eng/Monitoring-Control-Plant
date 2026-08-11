@@ -229,56 +229,66 @@
         </div>
     </div>
 
-    <!-- LOGIN SECTION (Front Page with Drum Oli Logo) -->
-    <section id="login-section" class="flex-1 flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-amber-950">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-slate-100">
-            <div class="text-center mb-8">
-                <!-- Drum Oli Custom SVG Logo -->
-                <div class="w-20 h-20 bg-gradient-to-tr from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/30 p-2">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-14 h-14">
-                        <!-- Drum Body -->
-                        <path d="M16 12C16 10.8954 16.8954 10 18 10H46C47.1046 10 48 10.8954 48 12V52C48 53.1046 47.1046 54 46 54H18C16.8954 54 16 53.1046 16 52V12Z" fill="#0f172a" stroke="#fef3c7" stroke-width="2"/>
-                        <!-- Drum Ribs / Hoops -->
-                        <path d="M16 22H48" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M16 42H48" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
-                        <!-- Oil Drop Symbol on Drum -->
-                        <path d="M32 25C32 25 24 33 24 38C24 42.4183 27.5817 46 32 46C36.4183 46 40 42.4183 40 38C40 33 32 25 32 25Z" fill="#f59e0b"/>
-                    </svg>
-                </div>
-                <h1 class="text-2xl font-bold text-slate-800">OIL MONITORING SYSTEM</h1>
-                <p class="text-sm text-slate-500 mt-1">Sistem Oil Monitoring</p>
-            </div>
+  <!-- LOGIN SECTION -->
+<section id="login-section" class="relative flex-1 flex items-center justify-center min-h-screen p-4 bg-cover bg-center bg-no-repeat" style="background-image: url('mine-truck.jpg');">
+  
+  <!-- Overlay Gelap (Agar Form Terbaca Jelas) -->
+  <div class="absolute inset-0 bg-black/40 z-0"></div>
 
-            <form id="login-form" class="space-y-5" onsubmit="handleLogin(event)">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Username</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                            <i class="fa-solid fa-user"></i>
-                        </span>
-                        <input type="text" id="login-username" required placeholder="Masukkan username" 
-                            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all">
-                    </div>
-                </div>
+  <!-- Card Login Transparan (Glassmorphism) -->
+  <div class="relative z-10 w-full max-w-md bg-slate-900/60 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/10 text-white">
+    
+    <!-- Header Logo & Judul -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-extrabold tracking-wider text-amber-400 uppercase">USER LOGIN</h1>
+      <p class="text-xs text-slate-300 font-medium mt-1 tracking-wide uppercase">Sistem Monitoring & Control Plant</p>
+    </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Password</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                            <i class="fa-solid fa-lock"></i>
-                        </span>
-                        <input type="password" id="login-password" required placeholder="••••••••" 
-                            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all">
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-semibold rounded-lg shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    <span>LOGIN</span>
-                </button>
-            </form>
+    <!-- Form Login -->
+    <form id="login-form" class="space-y-5" onsubmit="handleLogin(event)">
+      
+      <!-- Input Username -->
+      <div>
+        <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-2">Username</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-amber-400">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <input type="text" id="login-username" required placeholder="USERNAME" 
+                 class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/60 border border-slate-700/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm transition-all shadow-inner">
         </div>
-    </section>
+      </div>
+
+      <!-- Input Password -->
+      <div>
+        <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-2">Password</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-amber-400">
+            <i class="fa-solid fa-lock"></i>
+          </span>
+          <input type="password" id="login-password" required placeholder="PASSWORD" 
+                 class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/60 border border-slate-700/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm transition-all shadow-inner">
+        </div>
+      </div>
+
+      <!-- Tombol Login -->
+      <button type="submit" 
+              class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:scale-[0.99] text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm border border-amber-400/30 cursor-pointer">
+        <span>LOGIN</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </form>
+
+    <!-- Footer Card -->
+    <div class="mt-6 pt-4 border-t border-white/10 text-center">
+      <p class="text-[11px] text-slate-300 font-medium">
+        <i class="fa-solid fa-shield-halved text-amber-400 mr-1"></i>
+        BSS Mining Operational Control
+      </p>
+    </div>
+
+  </div>
+</section>
 
     <!-- MAIN APP SECTION WITH TOP NAVIGATION (Hidden until login) -->
     <div id="main-app" class="hidden flex-1 flex flex-col min-h-screen bg-slate-50">
