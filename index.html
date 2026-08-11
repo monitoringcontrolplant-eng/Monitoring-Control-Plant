@@ -202,23 +202,6 @@
                         <p class="text-xs font-bold text-slate-800">Export Data</p>
                         <p class="text-[11px] text-slate-500">Mengunduh laporan dalam format CSV/Excel</p>
                     </div>
-                    <!-- Fitur Import Data (Khusus Excel) -->
-<div class="p-3 bg-emerald-50/60 rounded-lg border border-emerald-200 flex items-center justify-between mt-3">
-  <div>
-    <p class="text-xs font-bold text-emerald-900">Import Data Excel</p>
-    <p class="text-[11px] text-emerald-700">Unggah file laporan lokal khusus format (.xlsx / .xls)</p>
-  </div>
-  <div>
-    <!-- Input File Tersembunyi Khusus Excel -->
-    <input type="file" id="import-excel-file" accept=".xlsx, .xls" class="hidden" onchange="handleImportExcel(event)">
-    
-    <!-- Tombol Trigger Upload -->
-    <button type="button" onclick="document.getElementById('import-excel-file').click()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-1.5 transition-all cursor-pointer">
-      <i class="fa-solid fa-file-excel"></i>
-      <span>Upload Excel</span>
-    </button>
-  </div>
-</div>
                     <input type="checkbox" id="perm-export-data" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
                 </div>
 
@@ -379,18 +362,37 @@
                     </div>
                 </div>
 
-                <!-- Filter Section -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-filter text-amber-500"></i>
-                            <h2 class="font-bold text-slate-800 text-base">Filter & Cut Off Date Dashboard</h2>
-                        </div>
-                        <button onclick="resetDashboardFilters()" class="text-xs text-amber-600 hover:text-amber-800 font-semibold flex items-center gap-1">
-                            <i class="fa-solid fa-rotate-left"></i> Reset Filter
-                        </button>
-                    </div>
+               <!-- Filter Section -->
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-filter text-amber-500"></i>
+          <h2 class="font-bold text-slate-800 text-base">Filter & Cut Off Date Dashboard</h2>
+        </div>
+        <button onclick="resetDashboardFilters()" class="text-xs text-amber-600 hover:text-amber-800 font-semibold flex items-center gap-1">
+          <i class="fa-solid fa-rotate-left"></i> Reset Filter
+        </button>
+      </div>
 
+      <!-- FITUR IMPORT EXCEL LOCAL -->
+      <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-file-excel"></i>
+          </div>
+          <div>
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Import Data Excel Local</h3>
+            <p class="text-[11px] text-slate-500">Unggah file laporan lokal format (.xlsx / .xls)</p>
+          </div>
+        </div>
+        <div>
+          <input type="file" id="import-excel-file-dashboard" accept=".xlsx, .xls" class="hidden" onchange="handleImportExcel(event)">
+          <button type="button" onclick="document.getElementById('import-excel-file-dashboard').click()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow transition-all flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-file-circle-plus"></i>
+            <span>Upload Excel (.xlsx)</span>
+          </button>
+        </div>
+      </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                         <!-- Model / Code Unit Filter -->
                         <div>
