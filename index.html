@@ -1849,18 +1849,25 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQy3cklvJkOBaED07VTo1pLLNmn4qPTm6DtK1LjR3N4KjG6KYDkNIMd8QSWmUvvkUfyA/exec";
 
     // 1. Fungsi Mengambil Data dari Google Sheets saat Refresh/Load (GET)
-    function loadSavedData() {
-        fetch(`${SCRIPT_URL}?action=getData`)
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    renderOilTable(data);
+function loadSavedData() {
+    fetch(`${SCRIPT_URL}?action=getData`)
+        .then(response => response.json())
+        .then(data => {
+            if (Array.isArray(data)) {
+                // Simpan data dari Google Sheets ke variabel global
+                oilLogs = data; 
+                
+                // PENTING: Hanya render tabel JIKA user sudah login
+                // Ini mencegah error "currentUser is null" yang bikin fitur login macet
+                if (typeof currentUser !== 'undefined' && currentUser) {
+                    renderOilTable(oilLogs);
                 }
-            })
-            .catch(error => {
-                console.error('Gagal memuat data dari Spreadsheet:', error);
-            });
-    }
+            }
+        })
+        .catch(error => {
+            console.error('Gagal memuat data dari Spreadsheet:', error);
+        });
+}
 
     // Jalankan otomatis saat halaman selesai dimuat
     document.addEventListener('DOMContentLoaded', loadSavedData);
