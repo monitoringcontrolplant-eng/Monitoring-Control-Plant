@@ -1400,7 +1400,7 @@
 
             const btnExport = document.getElementById('btn-export-csv');
             if (btnExport) {
-                if (currentUser && currentUser.permissions && currentUser.permissions.export_data) {
+                if (currentUser && currentUser.permissions.export_data) {
                     btnExport.classList.remove('hidden');
                 } else {
                     btnExport.classList.add('hidden');
@@ -1408,64 +1408,55 @@
             }
 
             if (dataToRender.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="13" class="py-8 text-center text-slate-400">
-                            <i class="fa-solid fa-inbox text-3xl mb-2 block"></i>
-                            Tidak ada data transaksi pengisian oli yang ditemukan.
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 text-slate-400">Tidak ada data transaksi pengisian oli ditemukan.</td></tr>`;
                 document.getElementById('table-info').innerText = 'Menampilkan 0 data';
                 return;
             }
 
             dataToRender.forEach((item, index) => {
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-amber-50/40 transition-colors';
+                tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100";
 
-                const canEdit = currentUser && currentUser.permissions && currentUser.permissions.edit_trx;
-                const canDelete = currentUser && currentUser.permissions && currentUser.permissions.delete_trx;
-
-                let actionButtons = '';
-                if (canEdit || canDelete) {
-                    if (canEdit) {
-                        actionButtons += `
-                            <button onclick="openEditModal(${item.id})" title="Edit Transaksi" class="p-1.5 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded transition-colors mr-1">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                        `;
-                    }
-                    if (canDelete) {
-                        actionButtons += `
-                            <button onclick="confirmDeleteTrx(${item.id})" title="Hapus Transaksi" class="p-1.5 bg-red-100 hover:bg-red-200 text-red-700 rounded transition-colors">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        `;
-                    }
-                } else {
-                    actionButtons = `<span class="text-[10px] text-slate-400 font-medium">Read Only</span>`;
+                let actions = [];
+                if (currentUser && currentUser.permissions.edit_trx) {
+                    actions.push(`
+                        <button onclick="openEditModal(${item.id})" title="Edit Data" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded transition-all">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                    `);
                 }
 
+                if (currentUser && currentUser.permissions.delete_trx) {
+                    actions.push(`
+                        <button onclick="confirmDeleteLog(${item.id})" title="Hapus Data" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded transition-all">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `);
+                }
+
+                const actionHTML = actions.length > 0 
+                    ? `<div class="flex items-center justify-center gap-1">${actions.join('')}</div>`
+                    : `<span class="text-[10px] text-slate-400 font-normal">Tidak ada izin</span>`;
+
                 tr.innerHTML = `
-                    <td class="py-3 px-4 font-semibold text-slate-500">${index + 1}</td>
+                    <td class="py-3 px-4 font-mono text-slate-400">${index + 1}</td>
                     <td class="py-3 px-4 font-bold text-slate-800">${item.codeUnit}</td>
                     <td class="py-3 px-4 whitespace-nowrap">${item.tanggal}</td>
-                    <td class="py-3 px-4 font-semibold text-amber-600">${item.jumlah} L</td>
+                    <td class="py-3 px-4 font-bold text-amber-600">${item.jumlah} L</td>
                     <td class="py-3 px-4">${item.jenisOil}</td>
-                    <td class="py-3 px-4 whitespace-nowrap">${item.typeOil}</td>
+                    <td class="py-3 px-4 font-mono text-slate-600 text-[11px]">${item.typeOil}</td>
                     <td class="py-3 px-4">${item.component}</td>
-                    <td class="py-3 px-4"><span class="bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200 text-[10px]">${item.jenisPengisian}</span></td>
-                    <td class="py-3 px-4"><span class="font-bold ${item.shift === 'DS' ? 'text-amber-600' : 'text-blue-600'}">${item.shift}</span></td>
-                    <td class="py-3 px-4 whitespace-nowrap">${item.station}</td>
-                    <td class="py-3 px-4 whitespace-nowrap">${item.manpower}</td>
-                    <td class="py-3 px-4 max-w-xs truncate" title="${item.problem}">${item.problem}</td>
-                    <td class="py-3 px-4 text-center whitespace-nowrap">${actionButtons}</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">${item.jenisPengisian}</span></td>
+                    <td class="py-3 px-4 font-semibold">${item.shift}</td>
+                    <td class="py-3 px-4">${item.station}</td>
+                    <td class="py-3 px-4">${item.manpower}</td>
+                    <td class="py-3 px-4 text-slate-500 max-w-xs truncate" title="${item.problem}">${item.problem}</td>
+                    <td class="py-3 px-4 text-center">${actionHTML}</td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('table-info').innerText = `Menampilkan ${dataToRender.length} dari total ${oilLogs.length} transaksi`;
+            document.getElementById('table-info').innerText = `Menampilkan ${dataToRender.length} dari ${oilLogs.length} total data`;
         }
 
         function filterTable() {
@@ -1475,16 +1466,19 @@
                        item.jenisOil.toLowerCase().includes(query) ||
                        item.typeOil.toLowerCase().includes(query) ||
                        item.component.toLowerCase().includes(query) ||
-                       item.station.toLowerCase().includes(query) ||
                        item.manpower.toLowerCase().includes(query) ||
-                       item.problem.toLowerCase().includes(query) ||
-                       item.jenisPengisian.toLowerCase().includes(query);
+                       item.station.toLowerCase().includes(query);
             });
             renderHistoryTable(filtered);
         }
 
         function openEditModal(id) {
-            const item = oilLogs.find(o => o.id === id);
+            if (!currentUser.permissions.edit_trx) {
+                showToast("Anda tidak memiliki hak akses untuk mengedit data!", "error");
+                return;
+            }
+
+            const item = oilLogs.find(x => x.id === id);
             if (!item) return;
 
             document.getElementById('edit-id').value = item.id;
@@ -1511,239 +1505,202 @@
             e.preventDefault();
 
             if (!currentUser.permissions.edit_trx) {
-                showToast("Anda tidak memiliki hak akses untuk mengedit data!", "error");
+                showToast("Akses ditolak!", "error");
                 return;
             }
 
             const id = parseInt(document.getElementById('edit-id').value);
-            const index = oilLogs.findIndex(o => o.id === id);
+            const index = oilLogs.findIndex(x => x.id === id);
+            if (index === -1) return;
 
-            if (index !== -1) {
-                const updatedItem = {
-                    id: id,
-                    codeUnit: document.getElementById('edit-code-unit').value.trim().toUpperCase(),
-                    tanggal: document.getElementById('edit-tanggal').value,
-                    jumlah: parseFloat(document.getElementById('edit-jumlah-oil').value),
-                    jenisOil: document.getElementById('edit-jenis-oil').value,
-                    typeOil: document.getElementById('edit-type-oil').value,
-                    component: document.getElementById('edit-component').value,
-                    jenisPengisian: document.getElementById('edit-jenis-pengisian').value,
-                    shift: document.getElementById('edit-shift').value,
-                    station: document.getElementById('edit-station').value.trim(),
-                    manpower: document.getElementById('edit-manpower').value.trim(),
-                    problem: document.getElementById('edit-problem').value.trim() || '-'
-                };
+            const oldRecord = oilLogs[index];
 
-                oilLogs[index] = updatedItem;
+            oilLogs[index] = {
+                id: id,
+                codeUnit: document.getElementById('edit-code-unit').value.trim().toUpperCase(),
+                tanggal: document.getElementById('edit-tanggal').value,
+                jumlah: parseFloat(document.getElementById('edit-jumlah-oil').value),
+                jenisOil: document.getElementById('edit-jenis-oil').value,
+                typeOil: document.getElementById('edit-type-oil').value,
+                component: document.getElementById('edit-component').value,
+                jenisPengisian: document.getElementById('edit-jenis-pengisian').value,
+                shift: document.getElementById('edit-shift').value,
+                station: document.getElementById('edit-station').value.trim(),
+                manpower: document.getElementById('edit-manpower').value.trim(),
+                problem: document.getElementById('edit-problem').value.trim() || '-'
+            };
 
-                logActivity("Edit Transaksi", `Mengubah transaksi ID ${id} (${updatedItem.codeUnit} - ${updatedItem.jumlah} L)`, "update");
-                closeEditModal();
-                populateUnitFilterDropdown();
-                renderHistoryTable();
-                showToast(`Data transaksi ${updatedItem.codeUnit} berhasil diperbarui!`, "success");
+            logActivity("Edit Transaksi", `Perubahan data transaksi ${oldRecord.codeUnit} (${oldRecord.jumlah}L -> ${oilLogs[index].jumlah}L)`, "update");
+
+            closeEditModal();
+            populateUnitFilterDropdown();
+            renderHistoryTable();
+            if (!document.getElementById('view-dashboard').classList.contains('hidden')) {
+                renderDashboard();
             }
+
+            showToast("Data transaksi berhasil diperbarui!", "success");
         }
 
-        function confirmDeleteTrx(id) {
+        function confirmDeleteLog(id) {
             if (!currentUser.permissions.delete_trx) {
                 showToast("Anda tidak memiliki hak akses untuk menghapus data!", "error");
                 return;
             }
 
-            const item = oilLogs.find(o => o.id === id);
+            const item = oilLogs.find(i => i.id === id);
             if (!item) return;
 
             showModal(
-                "Hapus Transaksi",
-                `Apakah Anda yakin ingin menghapus transaksi unit ${item.codeUnit} (${item.jumlah} L)? Data yang dihapus tidak dapat dikembalikan.`,
-                () => deleteTrx(id)
+                "Konfirmasi Hapus Data",
+                `Apakah Anda yakin ingin menghapus data transaksi pengisian oli unit ${item.codeUnit} (${item.jumlah} L)?`,
+                () => {
+                    oilLogs = oilLogs.filter(i => i.id !== id);
+                    logActivity("Hapus Transaksi", `Menghapus transaksi unit ${item.codeUnit} (${item.jumlah} L - ${item.jenisOil})`, "delete");
+
+                    populateUnitFilterDropdown();
+                    renderHistoryTable();
+                    if (!document.getElementById('view-dashboard').classList.contains('hidden')) {
+                        renderDashboard();
+                    }
+                    showToast("Data transaksi berhasil dihapus.", "success");
+                }
             );
-        }
-
-        function deleteTrx(id) {
-            const item = oilLogs.find(o => o.id === id);
-            oilLogs = oilLogs.filter(o => o.id !== id);
-
-            logActivity("Hapus Transaksi", `Menghapus data transaksi ID ${id} (${item ? item.codeUnit : '-'})`, "delete");
-            populateUnitFilterDropdown();
-            renderHistoryTable();
-            showToast("Data transaksi berhasil dihapus!", "success");
-        }
-
-        function exportToCSV() {
-            if (!currentUser.permissions.export_data) {
-                showToast("Anda tidak memiliki izin untuk mengunduh data!", "error");
-                return;
-            }
-
-            if (oilLogs.length === 0) {
-                showToast("Tidak ada data untuk diexport!", "error");
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "No,Code Unit,Tanggal,Jumlah Oil (L),Jenis Oil,Type Oil,Component,Jenis Pengisian,Shift,Station,Manpower,Problem\n";
-
-            oilLogs.forEach((item, idx) => {
-                const row = [
-                    idx + 1,
-                    `"${item.codeUnit}"`,
-                    `"${item.tanggal}"`,
-                    item.jumlah,
-                    `"${item.jenisOil}"`,
-                    `"${item.typeOil}"`,
-                    `"${item.component}"`,
-                    `"${item.jenisPengisian}"`,
-                    `"${item.shift}"`,
-                    `"${item.station}"`,
-                    `"${item.manpower}"`,
-                    `"${item.problem.replace(/"/g, '""')}"`
-                ].join(",");
-                csvContent += row + "\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Laporan_Pengisian_Oli_${getFormattedTimestamp().replace(/[: ]/g, '_')}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            logActivity("Export Data", "Mengunduh file laporan transaksi pengisian oli dalam format CSV", "create");
-            showToast("Data berhasil diexport ke CSV/Excel!", "success");
         }
 
         function renderUsersTable() {
             const tbody = document.getElementById('users-table-body');
-            if (!tbody) return;
-
             tbody.innerHTML = '';
+
             document.getElementById('user-count-badge').innerText = `${users.length} Users`;
 
             users.forEach(user => {
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition-colors';
+                tr.className = "hover:bg-slate-50 border-b border-slate-100";
+                
+                const isAktif = user.status === "Aktif";
+                const statusBadge = isAktif 
+                    ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">Aktif</span>`
+                    : `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-100 text-red-800">Non-Aktif</span>`;
 
-                const isSelf = currentUser && currentUser.id === user.id;
+                const roleBadgeMap = {
+                    'Admin': 'bg-purple-100 text-purple-800',
+                    'Supervisor': 'bg-blue-100 text-blue-800',
+                    'Operator': 'bg-slate-100 text-slate-800',
+                    'Viewer': 'bg-amber-100 text-amber-800'
+                };
+
+                const roleBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-semibold ${roleBadgeMap[user.role] || 'bg-slate-100 text-slate-700'}">${user.role}</span>`;
+
+                const passwordCellHTML = `
+                    <div class="flex items-center gap-2">
+                        <span id="pwd-text-${user.id}" class="font-mono text-slate-500 tracking-wider">••••••••</span>
+                        <button onclick="togglePasswordVisibility(${user.id})" title="Lihat/Sembunyikan Sandi" class="text-amber-600 hover:text-amber-700 p-1">
+                            <i id="pwd-icon-${user.id}" class="fa-solid fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                `;
+
+                const actionBtns = `
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="openPermissionsModal(${user.id})" class="px-2 py-1 bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 text-[11px] font-semibold rounded transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-key"></i> Hak Akses
+                        </button>
+                        <button onclick="toggleUserStatus(${user.id})" class="px-2 py-1 rounded border text-[11px] font-semibold transition-all ${isAktif ? 'border-red-200 text-red-600 hover:bg-red-50' : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'}">
+                            ${isAktif ? 'Non-aktifkan' : 'Aktifkan'}
+                        </button>
+                    </div>
+                `;
 
                 tr.innerHTML = `
-                    <td class="py-3 px-4 font-bold text-slate-800">
-                        ${user.fullname} ${isSelf ? '<span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded ml-1 font-normal">(Anda)</span>' : ''}
-                    </td>
-                    <td class="py-3 px-4 font-mono font-semibold text-slate-600">${user.username}</td>
-                    <td class="py-3 px-4 font-mono">
-                        <div class="flex items-center gap-2">
-                            <span id="pwd-text-${user.id}" class="text-slate-400 select-none">••••••••</span>
-                            <button onclick="togglePasswordVisibility(${user.id}, '${user.password}')" class="text-slate-400 hover:text-amber-600">
-                                <i id="pwd-icon-${user.id}" class="fa-solid fa-eye text-xs"></i>
-                            </button>
-                        </div>
-                    </td>
-                    <td class="py-3 px-4">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            user.role === 'Admin' ? 'bg-purple-100 text-purple-700 border border-purple-200' :
-                            user.role === 'Supervisor' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
-                            'bg-slate-100 text-slate-700 border border-slate-200'
-                        }">${user.role}</span>
-                    </td>
-                    <td class="py-3 px-4">
-                        <span class="inline-flex items-center gap-1 font-semibold text-[11px] ${user.status === 'Aktif' ? 'text-emerald-600' : 'text-red-500'}">
-                            <span class="w-1.5 h-1.5 rounded-full ${user.status === 'Aktif' ? 'bg-emerald-500' : 'bg-red-500'}"></span>
-                            ${user.status}
-                        </span>
-                    </td>
-                    <td class="py-3 px-4 text-center whitespace-nowrap">
-                        <div class="flex items-center justify-center gap-1">
-                            <button onclick="openPermissionsModal(${user.id})" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-md font-semibold text-[11px] transition-colors flex items-center gap-1">
-                                <i class="fa-solid fa-user-shield"></i> Hak Akses
-                            </button>
-                            ${!isSelf ? `
-                                <button onclick="toggleUserStatus(${user.id})" class="px-2 py-1 ${user.status === 'Aktif' ? 'bg-red-50 hover:bg-red-100 text-red-600' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-600'} rounded-md font-semibold text-[11px] transition-colors">
-                                    ${user.status === 'Aktif' ? 'Nonaktifkan' : 'Aktifkan'}
-                                </button>
-                            ` : ''}
-                        </div>
-                    </td>
+                    <td class="py-3 px-4 font-semibold text-slate-800">${user.fullname}</td>
+                    <td class="py-3 px-4 font-mono text-slate-600">${user.username}</td>
+                    <td class="py-3 px-4">${passwordCellHTML}</td>
+                    <td class="py-3 px-4">${roleBadge}</td>
+                    <td class="py-3 px-4">${statusBadge}</td>
+                    <td class="py-3 px-4 text-center">${actionBtns}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function togglePasswordVisibility(userId, realPassword) {
-            const pwdText = document.getElementById(`pwd-text-${userId}`);
-            const pwdIcon = document.getElementById(`pwd-icon-${userId}`);
+        function togglePasswordVisibility(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
 
-            if (pwdText.innerText === '••••••••') {
-                pwdText.innerText = realPassword;
-                pwdText.classList.remove('text-slate-400', 'select-none');
-                pwdText.classList.add('text-slate-800', 'font-bold');
-                pwdIcon.classList.remove('fa-eye');
-                pwdIcon.classList.add('fa-eye-slash');
+            const pwdSpan = document.getElementById(`pwd-text-${userId}`);
+            const iconEl = document.getElementById(`pwd-icon-${userId}`);
+
+            if (pwdSpan.innerText === "••••••••") {
+                pwdSpan.innerText = user.password;
+                pwdSpan.classList.add('text-amber-700', 'font-bold');
+                iconEl.className = "fa-solid fa-eye-slash text-xs";
             } else {
-                pwdText.innerText = '••••••••';
-                pwdText.classList.add('text-slate-400', 'select-none');
-                pwdText.classList.remove('text-slate-800', 'font-bold');
-                pwdIcon.classList.remove('fa-eye-slash');
-                pwdIcon.classList.add('fa-eye');
+                pwdSpan.innerText = "••••••••";
+                pwdSpan.classList.remove('text-amber-700', 'font-bold');
+                iconEl.className = "fa-solid fa-eye text-xs";
             }
         }
 
         function handleAddUser(e) {
             e.preventDefault();
 
-            if (!currentUser.permissions.manage_users) {
-                showToast("Anda tidak memiliki hak akses untuk menambah user!", "error");
+            if (currentUser && !currentUser.permissions.manage_users) {
+                showToast("Hanya Admin / Pengelola yang diizinkan menambah user baru!", "error");
                 return;
             }
 
             const fullname = document.getElementById('new-user-fullname').value.trim();
-            const username = document.getElementById('new-user-username').value.trim();
+            const username = document.getElementById('new-user-username').value.trim().toLowerCase();
             const password = document.getElementById('new-user-password').value.trim();
             const role = document.getElementById('new-user-role').value;
 
-            if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+            if (users.some(u => u.username.toLowerCase() === username)) {
                 showToast("Username tersebut sudah digunakan!", "error");
                 return;
             }
 
-            let defaultPerms = {
-                view_dashboard: true,
-                input_trx: role !== 'Viewer',
-                edit_trx: role === 'Admin' || role === 'Supervisor',
-                delete_trx: role === 'Admin',
-                view_history: true,
-                manage_users: role === 'Admin',
-                view_activity_logs: role === 'Admin' || role === 'Supervisor',
-                export_data: true
-            };
+            let defaultPerms = { ...FULL_PERMISSIONS };
+            if (role === 'Operator') {
+                defaultPerms = { view_dashboard: true, input_trx: true, edit_trx: false, delete_trx: false, view_history: true, manage_users: false, view_activity_logs: false, export_data: true };
+            } else if (role === 'Supervisor') {
+                defaultPerms = { view_dashboard: true, input_trx: true, edit_trx: true, delete_trx: false, view_history: true, manage_users: false, view_activity_logs: true, export_data: true };
+            } else if (role === 'Viewer') {
+                defaultPerms = { view_dashboard: true, input_trx: false, edit_trx: false, delete_trx: false, view_history: true, manage_users: false, view_activity_logs: false, export_data: false };
+            }
 
             const newUser = {
                 id: Date.now(),
-                fullname: fullname,
-                username: username,
-                password: password,
-                role: role,
+                fullname,
+                username,
+                password,
+                role,
                 status: "Aktif",
                 permissions: defaultPerms
             };
 
             users.push(newUser);
+            logActivity("Tambah User", `Menambahkan user baru ${fullname} (${username}) dengan role ${role}`, "user");
 
-            logActivity("Tambah User", `Mendaftarkan user baru: ${fullname} (${username}) - Role: ${role}`, "user");
             renderUsersTable();
             document.getElementById('add-user-form').reset();
-            showToast(`User ${fullname} berhasil ditambahkan!`, "success");
+            showToast(`User ${fullname} (${username}) berhasil ditambahkan!`, "success");
         }
 
         function toggleUserStatus(userId) {
-            const user = users.find(u => u.id === userId);
-            if (!user) return;
+            const u = users.find(x => x.id === userId);
+            if (!u) return;
 
-            user.status = user.status === 'Aktif' ? 'Nonaktif' : 'Aktif';
-            logActivity("Ubah Status User", `Mengubah status user ${user.username} menjadi ${user.status}`, "user");
+            if (currentUser && currentUser.id === u.id) {
+                showToast("Anda tidak bisa menonaktifkan akun yang sedang digunakan!", "error");
+                return;
+            }
+
+            u.status = u.status === "Aktif" ? "Non-Aktif" : "Aktif";
+            logActivity("Ubah Status User", `Mengubah status user ${u.username} menjadi ${u.status}`, "user");
+
             renderUsersTable();
-            showToast(`Status user ${user.fullname} diubah menjadi ${user.status}!`, "info");
+            showToast(`Status user ${u.username} diubah menjadi ${u.status}`, "info");
         }
 
         function openPermissionsModal(userId) {
@@ -1751,17 +1708,16 @@
             if (!user) return;
 
             document.getElementById('perm-user-id').value = user.id;
-            document.getElementById('perm-modal-user-title').innerText = `User: ${user.fullname} (@${user.username})`;
+            document.getElementById('perm-modal-user-title').innerText = `User: ${user.fullname} (@${user.username}) - Role: ${user.role}`;
 
-            const p = user.permissions;
-            document.getElementById('perm-view-dashboard').checked = !!p.view_dashboard;
-            document.getElementById('perm-input-trx').checked = !!p.input_trx;
-            document.getElementById('perm-edit-trx').checked = !!p.edit_trx;
-            document.getElementById('perm-delete-trx').checked = !!p.delete_trx;
-            document.getElementById('perm-view-history').checked = !!p.view_history;
-            document.getElementById('perm-export-data').checked = !!p.export_data;
-            document.getElementById('perm-manage-users').checked = !!p.manage_users;
-            document.getElementById('perm-view-activity-logs').checked = !!p.view_activity_logs;
+            const permKeys = ['view_dashboard', 'input_trx', 'edit_trx', 'delete_trx', 'view_history', 'manage_users', 'view_activity_logs', 'export_data'];
+            
+            permKeys.forEach(k => {
+                const chk = document.getElementById(`perm-${k.replace(/_/g, '-')}`);
+                if (chk) {
+                    chk.checked = !!user.permissions[k];
+                }
+            });
 
             document.getElementById('permissions-modal').classList.remove('hidden');
         }
@@ -1773,29 +1729,26 @@
         function saveUserPermissions() {
             const userId = parseInt(document.getElementById('perm-user-id').value);
             const user = users.find(u => u.id === userId);
-
             if (!user) return;
 
-            user.permissions = {
-                view_dashboard: document.getElementById('perm-view-dashboard').checked,
-                input_trx: document.getElementById('perm-input-trx').checked,
-                edit_trx: document.getElementById('perm-edit-trx').checked,
-                delete_trx: document.getElementById('perm-delete-trx').checked,
-                view_history: document.getElementById('perm-view-history').checked,
-                export_data: document.getElementById('perm-export-data').checked,
-                manage_users: document.getElementById('perm-manage-users').checked,
-                view_activity_logs: document.getElementById('perm-view-activity-logs').checked
-            };
+            const permKeys = ['view_dashboard', 'input_trx', 'edit_trx', 'delete_trx', 'view_history', 'manage_users', 'view_activity_logs', 'export_data'];
 
-            logActivity("Ubah Hak Akses", `Memperbarui izin hak akses untuk user ${user.username}`, "user");
-            closePermissionsModal();
+            permKeys.forEach(k => {
+                const chk = document.getElementById(`perm-${k.replace(/_/g, '-')}`);
+                if (chk) {
+                    user.permissions[k] = chk.checked;
+                }
+            });
+
+            logActivity("Ubah Hak Akses", `Memperbarui hak akses permission untuk user ${user.username}`, "user");
 
             if (currentUser && currentUser.id === user.id) {
-                currentUser.permissions = { ...user.permissions };
                 buildTopNav();
             }
 
-            showToast(`Hak akses user ${user.fullname} berhasil diperbarui!`, "success");
+            closePermissionsModal();
+            renderUsersTable();
+            showToast(`Hak akses untuk user ${user.username} berhasil diperbarui!`, "success");
         }
 
         function renderActivityLogsTable(dataToRender = activityLogs) {
@@ -1806,36 +1759,28 @@
             document.getElementById('log-count-badge').innerText = `${dataToRender.length} Total Activity`;
 
             if (dataToRender.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="py-8 text-center text-slate-400">
-                            <i class="fa-solid fa-clock text-3xl mb-2 block"></i>
-                            Tidak ada riwayat aktivitas yang dicatat.
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400">Tidak ada riwayat aktivitas ditemukan.</td></tr>`;
                 return;
             }
 
+            const typeTagMap = {
+                'create': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">Tambah Data</span>',
+                'update': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800">Edit Data</span>',
+                'delete': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800">Hapus Data</span>',
+                'user': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800">Kelola User</span>',
+                'auth': '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800">Autentikasi</span>'
+            };
+
             dataToRender.forEach(log => {
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition-colors';
-
-                let badgeColor = 'bg-slate-100 text-slate-700';
-                if (log.type === 'create') badgeColor = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
-                if (log.type === 'update') badgeColor = 'bg-amber-100 text-amber-800 border border-amber-200';
-                if (log.type === 'delete') badgeColor = 'bg-red-100 text-red-800 border border-red-200';
-                if (log.type === 'user') badgeColor = 'bg-purple-100 text-purple-800 border border-purple-200';
-                if (log.type === 'auth') badgeColor = 'bg-blue-100 text-blue-800 border border-blue-200';
-
+                tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100";
                 tr.innerHTML = `
                     <td class="py-3 px-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">${log.timestamp}</td>
-                    <td class="py-3 px-4 font-semibold text-slate-800 whitespace-nowrap">${log.user} <span class="text-slate-400 font-normal">(@${log.username})</span></td>
-                    <td class="py-3 px-4 whitespace-nowrap">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${badgeColor}">
-                            ${log.action}
-                        </span>
+                    <td class="py-3 px-4">
+                        <div class="font-semibold text-slate-800">${log.user}</div>
+                        <div class="text-[10px] font-mono text-slate-400">@${log.username}</div>
                     </td>
+                    <td class="py-3 px-4">${typeTagMap[log.type] || log.action}</td>
                     <td class="py-3 px-4 text-slate-600">${log.details}</td>
                 `;
                 tbody.appendChild(tr);
@@ -1846,65 +1791,59 @@
             const query = document.getElementById('activity-search').value.toLowerCase().trim();
             const typeFilter = document.getElementById('activity-type-filter').value;
 
-            const filtered = activityLogs.filter(log => {
-                const matchesQuery = log.user.toLowerCase().includes(query) ||
-                                     log.username.toLowerCase().includes(query) ||
-                                     log.action.toLowerCase().includes(query) ||
-                                     log.details.toLowerCase().includes(query);
-
-                const matchesType = typeFilter === 'ALL' || log.type === typeFilter;
-
-                return matchesQuery && matchesType;
+            const filtered = activityLogs.filter(item => {
+                if (typeFilter !== 'ALL' && item.type !== typeFilter) return false;
+                return item.user.toLowerCase().includes(query) ||
+                       item.username.toLowerCase().includes(query) ||
+                       item.action.toLowerCase().includes(query) ||
+                       item.details.toLowerCase().includes(query);
             });
 
             renderActivityLogsTable(filtered);
         }
-        
-        // 1. URL Web App Apps Script
-const SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbz1Tc2iObAiLVt0xBQBL-dDm0A3Y1V0IO71E-7T6tbb-tFR0EWF3VIcmtrXPgEz423dGQ/exec";
 
-// Array lokal untuk menyimpan data sementara di tampilan
-let activityLogs = JSON.parse(localStorage.getItem('activityLogs')) || [];
+        function exportToCSV() {
+            if (!currentUser.permissions.export_data) {
+                showToast("Anda tidak memiliki izin untuk mengunduh laporan!", "error");
+                return;
+            }
 
-// 2. Fungsi Kirim Data ke Google Sheets & LocalStorage
-function tambahAktivitasBaru(tanggal, aktivitas, detail) {
-    const dataBaru = { tanggal, aktivitas, detail };
+            if (oilLogs.length === 0) {
+                showToast("Tidak ada data untuk diexport!", "error");
+                return;
+            }
 
-    // Simpan ke memori lokal browser dulu (agar instant muncul)
-    activityLogs.push(dataBaru);
-    localStorage.setItem('activityLogs', JSON.stringify(activityLogs));
-    renderActivityLogsTable(activityLogs);
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Code Unit,Tanggal,Jumlah (L),Jenis Oil,Type Oil,Component,Jenis Pengisian,Shift,Station,Manpower,Problem\r\n";
 
-    // Kirim ke Google Sheets di background
-    fetch(SPREADSHEET_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataBaru)
-    })
-    .then(() => console.log("Tersimpan di Google Sheets!"))
-    .catch(err => console.error("Gagal kirim ke Sheets:", err));
-}
+            oilLogs.forEach(row => {
+                const rowData = [
+                    `"${row.codeUnit}"`,
+                    `"${row.tanggal}"`,
+                    row.jumlah,
+                    `"${row.jenisOil}"`,
+                    `"${row.typeOil}"`,
+                    `"${row.component}"`,
+                    `"${row.jenisPengisian}"`,
+                    `"${row.shift}"`,
+                    `"${row.station}"`,
+                    `"${row.manpower}"`,
+                    `"${row.problem}"`
+                ];
+                csvContent += rowData.join(",") + "\r\n";
+            });
 
-// 3. Panggil fungsi ini saat form Anda di-submit
-document.getElementById('formAktivitas').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Ambil nilai dari input form Anda
-    const tgl = document.getElementById('inputTanggal').value;
-    const akt = document.getElementById('inputAktivitas').value;
-    const dtl = document.getElementById('inputDetail').value;
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_Oil_Monitoring_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-    tambahAktivitasBaru(tgl, akt, dtl);
-    
-    // Reset form setelah simpan
-    this.reset();
-});
-
-// 4. Tampilkan data saat halaman di-refresh (F5)
-document.addEventListener('DOMContentLoaded', () => {
-    renderActivityLogsTable(activityLogs);
-});
+            logActivity("Export Data", "Mengunduh laporan data transaksi oli ke format CSV/Excel", "auth");
+            showToast("Laporan berhasil di-export ke CSV!", "success");
+        }
     </script>
 </body>
 </html>
