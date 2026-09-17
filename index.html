@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                <!-- Nav Items (Dynamic rendering based on Login state & Roles) -->
+                <!-- Nav Items -->
                 <nav id="top-nav" class="hidden md:flex items-center space-x-1"></nav>
 
                 <!-- User Profile / Login status -->
@@ -61,7 +61,7 @@
     <!-- MAIN CONTENT CONTAINER -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- LOGIN SECTION (Default visible if not logged in) -->
+        <!-- LOGIN SECTION -->
         <section id="login-section" class="max-w-md mx-auto my-12 bg-white p-8 rounded-2xl shadow-xl border border-slate-100">
             <div class="text-center mb-6">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-brand-50 text-brand-600 rounded-full mb-3">
@@ -194,7 +194,7 @@
                             </tr>
                         </thead>
                         <tbody id="oil-table-body">
-                            <tr><td colspan="5" class="text-center py-6 text-slate-400">Memuat data...</td></tr>
+                            <tr><td colspan="5" class="text-center py-6 text-slate-400">Belum ada data transaksi.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -236,7 +236,7 @@
 
     <!-- SCRIPT APPLICATION -->
     <script>
-        // URL Web App Google Apps Script Terbaru Anda
+        // URL Web App Google Apps Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1Tc2iObAiLVt0xBQBL-dDm0A3Y1V0IO71E-7T6tbb-tFR0EWF3VIcmtrXPgEz423dGQ/exec";
 
         // Global Data Storage
@@ -244,21 +244,24 @@
         let oilLogs = [];
         let activityLogs = [];
 
-        // Dummy User Database
+        // Database User Sederhana
         const users = [
             { id: 1, name: "Administrator", username: "admin", password: "123", role: "ADMIN" },
             { id: 2, name: "User Mekanik", username: "user", password: "123", role: "OPERATOR" }
         ];
 
-        // 1. Fungsi Mengambil Data dari Google Sheets saat Refresh/Load (GET)
+        // 1. Fungsi Mengambil Data dari Google Sheets (GET)
         function loadSavedData() {
             fetch(`${SCRIPT_URL}?action=getData`)
                 .then(response => response.json())
                 .then(data => {
                     if (Array.isArray(data)) {
                         oilLogs = data;
-                        renderOilTable(oilLogs);
-                        updateKPIs();
+                        // Hanya merender jika user sudah terverifikasi login
+                        if (currentUser) {
+                            renderOilTable(oilLogs);
+                            updateKPIs();
+                        }
                     }
                 })
                 .catch(error => {
@@ -283,7 +286,7 @@
                 buildTopNav();
                 showSection('dashboard-section');
                 
-                // Panggil data dari Spreadsheet setelah login berhasil
+                // Ambil data Google Sheets setelah login berhasil
                 loadSavedData();
                 showToast(`Selamat datang, ${currentUser.name}!`, "success");
             } else {
@@ -292,7 +295,7 @@
             }
         });
 
-        // 3. Form Submit Handler (POST)
+        // 3. Form Submit Handler (POST data ke Google Sheets)
         const transactionForm = document.getElementById('input-form');
         if (transactionForm) {
             transactionForm.addEventListener('submit', function (e) {
@@ -315,7 +318,7 @@
                 .then(result => {
                     if (result.status === "success") {
                         showToast("Data berhasil disimpan ke Spreadsheet!", "success");
-                        loadSavedData(); // Refresh tampilan data otomatis
+                        loadSavedData(); // Sync & reload data otomatis
                         transactionForm.reset();
                     } else {
                         showToast("Gagal menyimpan data: " + result.message, "error");
