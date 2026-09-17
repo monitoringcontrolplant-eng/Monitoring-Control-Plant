@@ -1028,42 +1028,50 @@
         }
 
         function handleLogin(e) {
-    if (e) e.preventDefault();
-    
-    const usernameInput = document.getElementById('username').value.trim();
-    const passwordInput = document.getElementById('password').value;
-    const loginError = document.getElementById('login-error');
+            e.preventDefault();
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value.trim();
 
-    const foundUser = users.find(u => u.username === usernameInput && u.password === passwordInput);
+            const foundUser = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput);
 
-    if (foundUser) {
-        currentUser = foundUser;
-        
-        // Sembunyikan halaman login & reset input
-        document.getElementById('login-section').classList.add('hidden');
-        if (loginError) loginError.classList.add('hidden');
-        document.getElementById('login-form').reset();
+            if (!foundUser) {
+                showToast("Username atau Password salah!", "error");
+                return;
+            }
 
-        // Tampilkan navigasi & komponen awal
-        buildTopNav();
-        populateUnitFilterDropdown();
-        renderUsersTable();
-        renderActivityLogsTable();
+            if (foundUser.status !== "Aktif") {
+                showToast("Akun Anda dinonaktifkan. Hubungi Administrator!", "error");
+                return;
+            }
 
-        // Ambil data dari Google Sheets
-        loadSavedData();
+            currentUser = foundUser;
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
 
-        logActivity("Login", `User ${currentUser.username} berhasil login ke sistem`, "auth");
-        showToast(`Selamat datang, ${currentUser.name}!`, "success");
-    } else {
-        if (loginError) {
-            loginError.innerText = "Username atau password salah!";
-            loginError.classList.remove('hidden');
-        } else {
-            showToast("Username atau password salah!", "error");
+            document.getElementById('user-display-name').innerText = currentUser.fullname;
+            document.getElementById('user-display-role').innerText = `Role: ${currentUser.role}`;
+
+            logActivity("Login System", `User ${currentUser.fullname} (${currentUser.username}) berhasil masuk`, "auth");
+            showToast(`Selamat datang kembali, ${currentUser.fullname}!`, "success");
+
+            buildTopNav();
+            populateUnitFilterDropdown();
+            renderHistoryTable();
+            renderUsersTable();
+            renderActivityLogsTable();
+
+            if (currentUser.permissions.view_dashboard) {
+                switchTab('dashboard');
+            } else if (currentUser.permissions.input_trx) {
+                switchTab('input');
+            } else if (currentUser.permissions.view_history) {
+                switchTab('history');
+            } else if (currentUser.permissions.view_activity_logs) {
+                switchTab('activity-logs');
+            } else if (currentUser.permissions.manage_users) {
+                switchTab('users');
+            }
         }
-    }
-}
 
         function handleLogout() {
             if (currentUser) {
@@ -1836,72 +1844,6 @@
             logActivity("Export Data", "Mengunduh laporan data transaksi oli ke format CSV/Excel", "auth");
             showToast("Laporan berhasil di-export ke CSV!", "success");
         }
-  <script>
-    // URL Web App Google Apps Script kamu
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQy3cklvJkOBaED07VTo1pLLNmn4qPTm6DtK1LjR3N4KjG6KYDkNIMd8QSWmUvvkUfyA/exec";
-
-    // 1. Fungsi Mengambil Data dari Google Sheets saat Refresh/Load (GET)
-function loadSavedData() {
-    fetch(`${SCRIPT_URL}?action=getData`)
-        .then(response => response.json())
-        .then(data => {
-            if (Array.isArray(data)) {
-                // 1. Simpan data dari Google Sheets ke variabel global oilLogs
-                oilLogs = data; 
-                
-                // 2. Tampilkan data ke tabel jika user sudah login
-                if (typeof currentUser !== 'undefined' && currentUser) {
-                    renderOilTable(oilLogs);
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Gagal memuat data dari Spreadsheet:', error);
-        });
-}
-    // Jalankan otomatis saat halaman selesai dimuat
-    document.addEventListener('DOMContentLoaded', loadSavedData);
-
-    // 2. Fungsi Mengirim Data ke Google Sheets saat Form Disimpan (POST)
-    const transactionForm = document.getElementById('input-form'); // Pastikan ID form kamu sesuai
-
-    if (transactionForm) {
-        transactionForm.addEventListener('submit', function (e) {
-            e.preventDefault(); // Mencegah reload halaman bawaan form
-
-            // Ambil data dari input form (Sesuaikan ID input dengan HTML kamu)
-            const formData = {
-                codeUnit: document.getElementById('codeUnit').value,
-                tanggal: document.getElementById('tanggal').value,
-                jumlahOil: document.getElementById('jumlahOil').value,
-                jenisOil: document.getElementById('jenisOil').value,
-                component: document.getElementById('component')?.value || ''
-            };
-
-            // Kirim data ke Google Sheets
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.status === "success") {
-                    alert("Data berhasil disimpan ke Spreadsheet!");
-                    loadSavedData(); // Refresh tampilan tabel otomatis
-                    transactionForm.reset(); // Kosongkan form
-                } else {
-                    alert("Gagal menyimpan data: " + result.message);
-                }
-            })
-            .catch(error => {
-                console.error("Error saat menyimpan:", error);
-                alert("Terjadi kesalahan koneksi saat menyimpan data.");
-            });
-        });
-    }
-</script>
+    </script>
 </body>
 </html>
