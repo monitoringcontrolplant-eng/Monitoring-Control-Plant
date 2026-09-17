@@ -1028,50 +1028,42 @@
         }
 
         function handleLogin(e) {
-            e.preventDefault();
-            const usernameInput = document.getElementById('login-username').value.trim();
-            const passwordInput = document.getElementById('login-password').value.trim();
+    if (e) e.preventDefault();
+    
+    const usernameInput = document.getElementById('username').value.trim();
+    const passwordInput = document.getElementById('password').value;
+    const loginError = document.getElementById('login-error');
 
-            const foundUser = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput);
+    const foundUser = users.find(u => u.username === usernameInput && u.password === passwordInput);
 
-            if (!foundUser) {
-                showToast("Username atau Password salah!", "error");
-                return;
-            }
+    if (foundUser) {
+        currentUser = foundUser;
+        
+        // Sembunyikan halaman login & reset input
+        document.getElementById('login-section').classList.add('hidden');
+        if (loginError) loginError.classList.add('hidden');
+        document.getElementById('login-form').reset();
 
-            if (foundUser.status !== "Aktif") {
-                showToast("Akun Anda dinonaktifkan. Hubungi Administrator!", "error");
-                return;
-            }
+        // Tampilkan navigasi & komponen awal
+        buildTopNav();
+        populateUnitFilterDropdown();
+        renderUsersTable();
+        renderActivityLogsTable();
 
-            currentUser = foundUser;
-            document.getElementById('login-section').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
+        // Ambil data dari Google Sheets
+        loadSavedData();
 
-            document.getElementById('user-display-name').innerText = currentUser.fullname;
-            document.getElementById('user-display-role').innerText = `Role: ${currentUser.role}`;
-
-            logActivity("Login System", `User ${currentUser.fullname} (${currentUser.username}) berhasil masuk`, "auth");
-            showToast(`Selamat datang kembali, ${currentUser.fullname}!`, "success");
-
-            buildTopNav();
-            populateUnitFilterDropdown();
-            renderHistoryTable();
-            renderUsersTable();
-            renderActivityLogsTable();
-
-            if (currentUser.permissions.view_dashboard) {
-                switchTab('dashboard');
-            } else if (currentUser.permissions.input_trx) {
-                switchTab('input');
-            } else if (currentUser.permissions.view_history) {
-                switchTab('history');
-            } else if (currentUser.permissions.view_activity_logs) {
-                switchTab('activity-logs');
-            } else if (currentUser.permissions.manage_users) {
-                switchTab('users');
-            }
+        logActivity("Login", `User ${currentUser.username} berhasil login ke sistem`, "auth");
+        showToast(`Selamat datang, ${currentUser.name}!`, "success");
+    } else {
+        if (loginError) {
+            loginError.innerText = "Username atau password salah!";
+            loginError.classList.remove('hidden');
+        } else {
+            showToast("Username atau password salah!", "error");
         }
+    }
+}
 
         function handleLogout() {
             if (currentUser) {
