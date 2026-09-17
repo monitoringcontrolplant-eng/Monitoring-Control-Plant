@@ -1854,11 +1854,10 @@ function loadSavedData() {
         .then(response => response.json())
         .then(data => {
             if (Array.isArray(data)) {
-                // Simpan data dari Google Sheets ke variabel global
+                // 1. Simpan data dari Google Sheets ke variabel global oilLogs
                 oilLogs = data; 
                 
-                // PENTING: Hanya render tabel JIKA user sudah login
-                // Ini mencegah error "currentUser is null" yang bikin fitur login macet
+                // 2. Tampilkan data ke tabel jika user sudah login
                 if (typeof currentUser !== 'undefined' && currentUser) {
                     renderOilTable(oilLogs);
                 }
@@ -1868,7 +1867,6 @@ function loadSavedData() {
             console.error('Gagal memuat data dari Spreadsheet:', error);
         });
 }
-
     // Jalankan otomatis saat halaman selesai dimuat
     document.addEventListener('DOMContentLoaded', loadSavedData);
 
