@@ -1859,6 +1859,50 @@
 
             renderActivityLogsTable(filtered);
         }
+        
+        // 1. URL Web App dari Google Apps Script milikmu
+const SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbz1Tc2iObAiLVt0xBQBL-dDm0A3Y1V0IO71E-7T6tbb-tFR0EWF3VIcmtrXPgEz423dGQ/exec";
+
+// 2. Fungsi untuk mengirim data baru ke Google Sheets
+function simpanKeSpreadsheet(dataAktivitas) {
+    fetch(SPREADSHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataAktivitas)
+    })
+    .then(() => {
+        console.log("Data berhasil dikirim ke Google Sheets!");
+        // Muat ulang data setelah berhasil menyimpan
+        muatDataDariSpreadsheet();
+    })
+    .catch(err => {
+        console.error("Gagal mengirim data:", err);
+    });
+}
+
+// 3. Fungsi untuk mengambil data dari Google Sheets saat halaman dibuka / F5
+function muatDataDariSpreadsheet() {
+    fetch(SPREADSHEET_URL)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Data berhasil dimuat dari Google Sheets:", data);
+            // Panggil fungsi render/tampilkan tabel milikmu di sini
+            if (typeof renderActivityLogsTable === 'function') {
+                renderActivityLogsTable(data);
+            }
+        })
+        .catch(err => {
+            console.error("Gagal memuat data:", err);
+        });
+}
+
+// 4. Jalankan pengambilan data otomatis saat halaman selesai di-load (F5)
+document.addEventListener('DOMContentLoaded', () => {
+    muatDataDariSpreadsheet();
+});
     </script>
 </body>
 </html>
