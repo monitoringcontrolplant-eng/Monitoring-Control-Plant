@@ -1844,6 +1844,67 @@
             logActivity("Export Data", "Mengunduh laporan data transaksi oli ke format CSV/Excel", "auth");
             showToast("Laporan berhasil di-export ke CSV!", "success");
         }
-    </script>
+  <script>
+    // URL Web App Google Apps Script kamu
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQy3cklvJkOBaED07VTo1pLLNmn4qPTm6DtK1LjR3N4KjG6KYDkNIMd8QSWmUvvkUfyA/exec";
+
+    // 1. Fungsi Mengambil Data dari Google Sheets saat Refresh/Load (GET)
+    function loadSavedData() {
+        fetch(`${SCRIPT_URL}?action=getData`)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    renderOilTable(data);
+                }
+            })
+            .catch(error => {
+                console.error('Gagal memuat data dari Spreadsheet:', error);
+            });
+    }
+
+    // Jalankan otomatis saat halaman selesai dimuat
+    document.addEventListener('DOMContentLoaded', loadSavedData);
+
+    // 2. Fungsi Mengirim Data ke Google Sheets saat Form Disimpan (POST)
+    const transactionForm = document.getElementById('input-form'); // Pastikan ID form kamu sesuai
+
+    if (transactionForm) {
+        transactionForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // Mencegah reload halaman bawaan form
+
+            // Ambil data dari input form (Sesuaikan ID input dengan HTML kamu)
+            const formData = {
+                codeUnit: document.getElementById('codeUnit').value,
+                tanggal: document.getElementById('tanggal').value,
+                jumlahOil: document.getElementById('jumlahOil').value,
+                jenisOil: document.getElementById('jenisOil').value,
+                component: document.getElementById('component')?.value || ''
+            };
+
+            // Kirim data ke Google Sheets
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "success") {
+                    alert("Data berhasil disimpan ke Spreadsheet!");
+                    loadSavedData(); // Refresh tampilan tabel otomatis
+                    transactionForm.reset(); // Kosongkan form
+                } else {
+                    alert("Gagal menyimpan data: " + result.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error saat menyimpan:", error);
+                alert("Terjadi kesalahan koneksi saat menyimpan data.");
+            });
+        });
+    }
+</script>
 </body>
 </html>
