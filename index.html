@@ -17,6 +17,14 @@
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
+        // Memuat data dari LocalStorage saat halaman di-refresh (F5)
+let oilLogs = JSON.parse(localStorage.getItem('oilLogsData')) || [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof renderTable === 'function') {
+        renderTable();
+    }
+});
         tailwind.config = {
             theme: {
                 extend: {
@@ -898,12 +906,12 @@
         let chartComponentInstance = null;
         let chartUnitInstance = null;
 
-        window.onload = function() {
+        window.onload = tion() {
             populateDropdownOptions();
             initializeDefaultDates();
         };
 
-        function showToast(message, type = 'success') {
+        tion showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
@@ -931,7 +939,7 @@
             }, 3500);
         }
 
-        function showModal(title, message, onConfirm) {
+        tion showModal(title, message, onConfirm) {
             const container = document.getElementById('modal-container');
             const content = document.getElementById('modal-content');
 
@@ -958,7 +966,7 @@
             };
         }
 
-        function getFormattedTimestamp() {
+        tion getFormattedTimestamp() {
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -969,7 +977,7 @@
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
 
-        function logActivity(action, details, type = 'create') {
+        tion logActivity(action, details, type = 'create') {
             if (!currentUser) return;
             const newLog = {
                 id: Date.now(),
@@ -984,7 +992,7 @@
             renderActivityLogsTable();
         }
 
-        function populateDropdownOptions() {
+        tion populateDropdownOptions() {
             const populateSelects = (selectIds, options) => {
                 selectIds.forEach(id => {
                     const el = document.getElementById(id);
@@ -999,7 +1007,7 @@
             populateSelects(['input-component', 'filter-component', 'edit-component'], DROPDOWN_COMPONENTS);
         }
 
-        function populateUnitFilterDropdown() {
+        tion populateUnitFilterDropdown() {
             const filterUnitSelect = document.getElementById('filter-unit');
             const currentVal = filterUnitSelect.value;
             filterUnitSelect.innerHTML = '<option value="ALL">Semua Unit</option>';
@@ -1014,7 +1022,7 @@
             }
         }
 
-        function initializeDefaultDates() {
+        tion initializeDefaultDates() {
             const today = new Date().toISOString().split('T')[0];
             const inputTanggal = document.getElementById('input-tanggal');
             if (inputTanggal) inputTanggal.value = today;
@@ -1027,7 +1035,7 @@
             document.getElementById('filter-date-end').value = lastDay;
         }
 
-        function handleLogin(e) {
+        tion handleLogin(e) {
             e.preventDefault();
             const usernameInput = document.getElementById('login-username').value.trim();
             const passwordInput = document.getElementById('login-password').value.trim();
@@ -1073,7 +1081,7 @@
             }
         }
 
-        function handleLogout() {
+        tion handleLogout() {
             if (currentUser) {
                 logActivity("Logout System", `User ${currentUser.fullname} LOGOUT`, "auth");
             }
@@ -1084,7 +1092,7 @@
             showToast("Berhasil logout dari sistem.", "info");
         }
 
-        function buildTopNav() {
+        tion buildTopNav() {
             const topNav = document.getElementById('top-nav-container');
 
             const navItems = [
@@ -1111,7 +1119,7 @@
             topNav.innerHTML = navHTML;
         }
 
-        function switchTab(tabName) {
+        tion switchTab(tabName) {
             const tabPermMap = {
                 'dashboard': 'view_dashboard',
                 'input': 'input_trx',
@@ -1144,7 +1152,7 @@
             }
         }
 
-        function resetDashboardFilters() {
+        tion resetDashboardFilters() {
             document.getElementById('filter-unit').value = 'ALL';
             document.getElementById('filter-jenis-oil').value = 'ALL';
             document.getElementById('filter-component').value = 'ALL';
@@ -1153,7 +1161,7 @@
             showToast("Filter dashboard berhasil direset", "info");
         }
 
-        function getFilteredData() {
+        tion getFilteredData() {
             const filterUnit = document.getElementById('filter-unit').value;
             const filterJenis = document.getElementById('filter-jenis-oil').value;
             const filterComp = document.getElementById('filter-component').value;
@@ -1170,7 +1178,7 @@
             });
         }
 
-        function renderDashboard() {
+        tion renderDashboard() {
             document.getElementById('dash-banner-role').innerText = `Role: ${currentUser.role}`;
             document.getElementById('dash-welcome-text').innerText = `Selamat Datang, ${currentUser.fullname}!`;
             
@@ -1233,7 +1241,7 @@
             renderChartUnit(unitAgg);
         }
 
-        function renderChartTrend(dateAgg) {
+        tion renderChartTrend(dateAgg) {
             const ctx = document.getElementById('chart-trend').getContext('2d');
             const sortedDates = Object.keys(dateAgg).sort();
             const values = sortedDates.map(d => dateAgg[d]);
@@ -1268,7 +1276,7 @@
             });
         }
 
-        function renderChartJenisOil(oilAgg) {
+        tion renderChartJenisOil(oilAgg) {
             const ctx = document.getElementById('chart-jenis-oil').getContext('2d');
             const labels = Object.keys(oilAgg);
             const values = Object.values(oilAgg);
@@ -1295,7 +1303,7 @@
             });
         }
 
-        function renderChartComponent(componentAgg) {
+        tion renderChartComponent(componentAgg) {
             const ctx = document.getElementById('chart-component').getContext('2d');
             const labels = Object.keys(componentAgg);
             const values = Object.values(componentAgg);
@@ -1325,7 +1333,7 @@
             });
         }
 
-        function renderChartUnit(unitAgg) {
+        tion renderChartUnit(unitAgg) {
             const ctx = document.getElementById('chart-unit').getContext('2d');
             const labels = Object.keys(unitAgg);
             const values = Object.values(unitAgg);
@@ -1355,7 +1363,7 @@
             });
         }
 
-        function handleFormSubmit(e) {
+        tion handleFormSubmit(e) {
             e.preventDefault();
 
             if (!currentUser.permissions.input_trx) {
@@ -1389,12 +1397,12 @@
             switchTab('history');
         }
 
-        function resetForm() {
+        tion resetForm() {
             document.getElementById('oil-input-form').reset();
             initializeDefaultDates();
         }
 
-        function renderHistoryTable(dataToRender = oilLogs) {
+        tion renderHistoryTable(dataToRender = oilLogs) {
             const tbody = document.getElementById('history-table-body');
             tbody.innerHTML = '';
 
@@ -1459,7 +1467,7 @@
             document.getElementById('table-info').innerText = `Menampilkan ${dataToRender.length} dari ${oilLogs.length} total data`;
         }
 
-        function filterTable() {
+        tion filterTable() {
             const query = document.getElementById('table-search').value.toLowerCase().trim();
             const filtered = oilLogs.filter(item => {
                 return item.codeUnit.toLowerCase().includes(query) ||
@@ -1472,7 +1480,7 @@
             renderHistoryTable(filtered);
         }
 
-        function openEditModal(id) {
+        tion openEditModal(id) {
             if (!currentUser.permissions.edit_trx) {
                 showToast("Anda tidak memiliki hak akses untuk mengedit data!", "error");
                 return;
@@ -1497,11 +1505,11 @@
             document.getElementById('edit-trx-modal').classList.remove('hidden');
         }
 
-        function closeEditModal() {
+        tion closeEditModal() {
             document.getElementById('edit-trx-modal').classList.add('hidden');
         }
 
-        function handleEditFormSubmit(e) {
+        tion handleEditFormSubmit(e) {
             e.preventDefault();
 
             if (!currentUser.permissions.edit_trx) {
@@ -1542,7 +1550,7 @@
             showToast("Data transaksi berhasil diperbarui!", "success");
         }
 
-        function confirmDeleteLog(id) {
+        tion confirmDeleteLog(id) {
             if (!currentUser.permissions.delete_trx) {
                 showToast("Anda tidak memiliki hak akses untuk menghapus data!", "error");
                 return;
@@ -1568,7 +1576,7 @@
             );
         }
 
-        function renderUsersTable() {
+        tion renderUsersTable() {
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = '';
 
@@ -1624,7 +1632,7 @@
             });
         }
 
-        function togglePasswordVisibility(userId) {
+        tion togglePasswordVisibility(userId) {
             const user = users.find(u => u.id === userId);
             if (!user) return;
 
@@ -1642,7 +1650,7 @@
             }
         }
 
-        function handleAddUser(e) {
+        tion handleAddUser(e) {
             e.preventDefault();
 
             if (currentUser && !currentUser.permissions.manage_users) {
@@ -1687,7 +1695,7 @@
             showToast(`User ${fullname} (${username}) berhasil ditambahkan!`, "success");
         }
 
-        function toggleUserStatus(userId) {
+        tion toggleUserStatus(userId) {
             const u = users.find(x => x.id === userId);
             if (!u) return;
 
@@ -1703,7 +1711,7 @@
             showToast(`Status user ${u.username} diubah menjadi ${u.status}`, "info");
         }
 
-        function openPermissionsModal(userId) {
+        tion openPermissionsModal(userId) {
             const user = users.find(u => u.id === userId);
             if (!user) return;
 
@@ -1722,11 +1730,11 @@
             document.getElementById('permissions-modal').classList.remove('hidden');
         }
 
-        function closePermissionsModal() {
+        tion closePermissionsModal() {
             document.getElementById('permissions-modal').classList.add('hidden');
         }
 
-        function saveUserPermissions() {
+        tion saveUserPermissions() {
             const userId = parseInt(document.getElementById('perm-user-id').value);
             const user = users.find(u => u.id === userId);
             if (!user) return;
@@ -1816,37 +1824,48 @@
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Code Unit,Tanggal,Jumlah (L),Jenis Oil,Type Oil,Component,Jenis Pengisian,Shift,Station,Manpower,Problem\r\n";
 
-           const scriptURL = 'https://script.google.com/macros/s/AKfycbz1Tc2iObAiLVt0xBQBL-dDm0A3Y1V0IO71E-7T6tbb-tFR0EWF3VIcmtrXPgEz423dGQ/exec';
+           function saveTransaction(event) {
+    if (event) event.preventDefault();
 
-            // Kirim data ke Google Sheets saat di-save / export
-            oilLogs.forEach(row => {
-              const formData = {
-                tanggal: row.Tanggal,
-                codeUnit: row.codeUnit,
-                jumlahOil: row.jumlah,
-                jenisOil: row.jenisOil,
-                typeOil: row.typeOil,
-                component: row.component,
-                jenisPengisian: row.jenisPengisian,
-                shift: row.shift,
-                station: row.station,
-                manpower: row.manpower,
-                problem: row.problem
-              };
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz1Tc2iObAiLVt0xBQBL-dDm0A3Y1V0IO71E-7T6tbb-tFR0EWF3VIcmtrXPgEz423dGQ/exec';
 
-              fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-              }).catch(error => console.error("Gagal kirim ke Google Sheets:", error));
-            });
+    const newLog = {
+        Tanggal: document.getElementById('tanggal').value,
+        codeUnit: document.getElementById('codeUnit').value,
+        jumlah: document.getElementById('jumlahOil').value,
+        jenisOil: document.getElementById('jenisOil').value,
+        typeOil: document.getElementById('typeOil').value,
+        component: document.getElementById('component').value,
+        jenisPengisian: document.getElementById('jenisPengisian').value,
+        shift: document.getElementById('shift').value,
+        station: document.getElementById('station').value,
+        manpower: document.getElementById('manpower').value,
+        problem: document.getElementById('problem').value
+    };
 
-            logActivity("Save Data", "Mengirim data transaksi oli ke Google Sheets", "auth");
-            showToast("Data berhasil tersimpan di Google Sheets!", "success");
-        }
+    // Simpan ke memori lokal browser agar tidak hilang saat F5
+    oilLogs.push(newLog);
+    localStorage.setItem('oilLogsData', JSON.stringify(oilLogs));
+    
+    if (typeof renderTable === 'function') renderTable();
+
+    // Kirim otomatis ke Google Sheets
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLog)
+    })
+    .then(() => {
+        showToast("Data berhasil tersimpan di Google Sheets!", "success");
+    })
+    .catch(error => {
+        console.error("Gagal kirim ke Google Sheets:", error);
+        showToast("Data tersimpan lokal, gagal ke Google Sheets", "warning");
+    });
+
+    document.getElementById('oilForm').reset();
+}
     </script>
 </body>
 </html>
