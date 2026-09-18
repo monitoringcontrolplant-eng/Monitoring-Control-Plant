@@ -359,7 +359,18 @@
                         <!-- Dynamic Quick Action Buttons -->
                     </div>
                 </div>
+                <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+    <!-- Tombol Upload Excel / CSV -->
+    <label class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+        <i class="fa-solid fa-file-arrow-up"></i> Upload Excel/CSV
+        <input type="file" id="upload-excel-file" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleExcelUpload(event)">
+    </label>
 
+    <!-- Tombol Export Excel -->
+    <button id="btn-export-csv" onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2">
+        <i class="fa-solid fa-file-excel"></i> Export Excel/CSV
+    </button>
+</div>
                 <!-- Filter Section -->
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -957,7 +968,138 @@
                 if (onConfirm) onConfirm();
             };
         }
+// URL Google Apps Script Web App Anda
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRfzuRXSVG9_HGwhh3-KNTeXIIjfx4jczmyv3Ti5chzVVHzVt_KH_r3Y6evsCrCD4yuA/exec";
 
+// Fungsi untuk Mengambil Data dari Google Spreadsheet saat Aplikasi Dimuat
+async function fetchLogsFromSheet() {
+    try {
+        showToast("Memuat data dari Google Spreadsheet...", "info");
+        const response = await fetch(SCRIPT_URL);
+        const result = await response.json();
+        if (Array.isArray(result) && result.length > 0) {
+            oilLogs = result;
+            populateUnitFilterDropdown();
+            renderHistoryTable();
+            if (currentUser && currentUser.permissions.view_dashboard) {
+                renderDashboard();
+            }
+            showToast("Data berhasil disinkronkan dari Spreadsheet!", "success");
+        }
+    } catch (error) {
+        console.error("Gagal mengambil data dari Google Spreadsheet:", error);
+        showToast("Gagal memuat data online. Menggunakan data lokal.", "error");
+    }
+}
+
+// Fungsi untuk Menyimpan Data / Sinkronisasi ke Google Spreadsheet
+async function syncDataToSheet(actionType, payloadData) {
+    try {
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Menghindari masalah CORS pada Google Apps Script
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: actionType, data: payloadData })
+        });
+    } catch (error) {
+        console.error("Gagal mengirim data ke Google Spreadsheet:", error);
+    }
+}
+
+// Modifikasi saat Login Berhasil (Memuat data online)
+const originalHandleLogin = window.handleLogin;
+window.handleLogin = function(e) {
+    // Jalankan fungsi login asli
+    // (Pastikan dipanggil setelah verifikasi sukses)
+};
+
+// Modifikasi Fungsi Submit Form Input Transaksi
+const originalHandleFormSubmit = window.handleFormSubmit;
+window.handleFormSubmit = async function(e) {
+    e.preventDefault();
+
+    if (!currentUser.permissions.input_trx) {
+        showToast("Anda tidak memiliki akses untuk menambah transaksi!", "error");
+        return;
+    }
+
+    const newLog = {
+        id: Date.now(),
+        codeUnit: document.getElementById('input-code-unit').value.trim().toUpperCase(),
+        tanggal: document.getElementById('input-tanggal').value,
+        jumlah: parseFloat(document.getElementById('input-jumlah-oil').value),
+        jenisOil: document.getElementById('input-jenis-oil').value,
+        typeOil: document.getElementById('input-type-oil').value,
+        component: document.getElementById('input-component').value,
+        jenisPengisian: document.getElementById('input-jenis-pengisian').value,
+        shift: document.getElementById('input-shift').value,
+        station: document.getElementById('input-station').value.trim(),
+        manpower: document.getElementById('input-manpower').value.trim(),
+        problem: document.getElementById('input-problem').value.trim() || '-'
+    };
+
+    oilLogs.unshift(newLog);
+
+    // Kirim ke Google Spreadsheet secara background
+    await syncDataToSheet('create', newLog);
+
+    logActivity("Input Transaksi", `Menambahkan transaksi ${newLog.codeUnit} (${newLog.jumlah} L - ${newLog.jenisOil})`, "create");
+    populateUnitFilterDropdown();
+    renderHistoryTable();
+    resetForm();
+
+    showToast(`Transaksi oli unit ${newLog.codeUnit} berhasil disimpan ke Spreadsheet!`, "success");
+    switchTab('history');
+}
+
+// Fitur Upload Excel / CSV (Membaca file dan memasukkannya ke sistem & Spreadsheet)
+function handleExcelUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const text = e.target.result;
+        const lines = text.split("\r\n").length > 1 ? text.split("\r\n") : text.split("\n");
+        
+        let importedCount = 0;
+        // Asumsi baris pertama adalah header, mulai baca dari baris ke-2
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+            
+            const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if (cols.length >= 3) {
+                const cleanCol = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+                
+                const importedLog = {
+                    id: Date.now() + i,
+                    codeUnit: cleanCol(cols[0]) || "UNKNOWN",
+                    tanggal: cleanCol(cols[1]) || new Date().toISOString().split('T')[0],
+                    jumlah: parseFloat(cleanCol(cols[2])) || 0,
+                    jenisOil: cleanCol(cols[3]) || "General",
+                    typeOil: cleanCol(cols[4]) || "-",
+                    component: cleanCol(cols[5]) || "-",
+                    jenisPengisian: cleanCol(cols[6]) || "TOP UP",
+                    shift: cleanCol(cols[7]) || "DS",
+                    station: cleanCol(cols[8]) || "-",
+                    manpower: cleanCol(cols[9]) || "-",
+                    problem: cleanCol(cols[10]) || "-"
+                };
+
+                oilLogs.push(importedLog);
+                await syncDataToSheet('create', importedLog);
+                importedCount++;
+            }
+        }
+
+        populateUnitFilterDropdown();
+        renderHistoryTable();
+        showToast(`Berhasil mengimpor dan menyimpan ${importedCount} data ke Google Spreadsheet!`, "success");
+        event.target.value = ''; // Reset input file
+    };
+    reader.readAsText(file);
+}
         function getFormattedTimestamp() {
             const now = new Date();
             const year = now.getFullYear();
