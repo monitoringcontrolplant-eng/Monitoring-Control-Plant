@@ -229,79 +229,61 @@
         </div>
     </div>
 
-<!-- LOGIN SECTION (Full Screen Mobile, Glassmorphism & Logo BSS) -->
-<section id="login-section" class="relative w-full min-h-screen min-h-[100dvh] flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat overflow-hidden" style="background-image: url('mine-truck.jpg');">
-  
-  <!-- Overlay Gelap Penuh -->
-  <div class="absolute inset-0 bg-black/40 z-0"></div>
+    <!-- LOGIN SECTION -->
+    <section id="login-section" class="relative w-full min-h-screen min-h-[100dvh] flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat overflow-hidden" style="background-image: url('mine-truck.jpg');">
+      <div class="absolute inset-0 bg-black/40 z-0"></div>
 
-  <!-- Card Login Transparan -->
-  <div class="relative z-10 w-full max-w-md bg-slate-900/75 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/10 text-white my-auto">
-    
-    <!-- Header Logo BSS & Judul -->
-    <div class="text-center mb-6 sm:mb-8">
-      <!-- LOGO BSS (Menggantikan Teks BSS) -->
-      <div class="flex justify-center mb-3">
-        <img src="BSS.jpg" alt="BSS Logo" class="h-20 w-auto object-contain">
-      </div>
-      
-      <h1 class="text-xl sm:text-2xl font-extrabold tracking-wider text-amber-400 uppercase"></h1>
-      <p class="text-[10px] sm:text-xs text-slate-300 font-medium mt-1 tracking-wide uppercase">Sistem Monitoring & Control Plant</p>
-    </div>
+      <div class="relative z-10 w-full max-w-md bg-slate-900/75 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/10 text-white my-auto">
+        <div class="text-center mb-6 sm:mb-8">
+          <div class="flex justify-center mb-3">
+            <img src="BSS.jpg" alt="BSS Logo" class="h-20 w-auto object-contain">
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-wider text-amber-400 uppercase"></h1>
+          <p class="text-[10px] sm:text-xs text-slate-300 font-medium mt-1 tracking-wide uppercase">Sistem Monitoring & Control Plant</p>
+        </div>
 
-    <!-- Form Login -->
-    <form id="login-form" class="space-y-4 sm:space-y-5" onsubmit="handleLogin(event)">
-      
-      <!-- Input Username -->
-      <div>
-        <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">Username</label>
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-amber-400">
-            <i class="fa-solid fa-user"></i>
-          </span>
-          <input type="text" id="login-username" required placeholder="USERNAME" 
-                 class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/60 border border-slate-700/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm transition-all shadow-inner">
+        <form id="login-form" class="space-y-4 sm:space-y-5" onsubmit="handleLogin(event)">
+          <div>
+            <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">Username</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-amber-400">
+                <i class="fa-solid fa-user"></i>
+              </span>
+              <input type="text" id="login-username" required placeholder="USERNAME" 
+                     class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/60 border border-slate-700/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm transition-all shadow-inner">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">Password</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-amber-400">
+                <i class="fa-solid fa-lock"></i>
+              </span>
+              <input type="password" id="login-password" required placeholder="PASSWORD" 
+                     class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/60 border border-slate-700/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm transition-all shadow-inner">
+            </div>
+          </div>
+
+          <button type="submit" 
+                  class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:scale-[0.99] text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm border border-amber-400/30 cursor-pointer">
+            <span>LOGIN</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-center gap-2">
+          <img src="BSS.jpg" alt="BSS Icon" class="h-4 w-auto rounded-sm">
+          <p class="text-[11px] text-slate-300 font-medium">Monitoring Control Plant</p>
         </div>
       </div>
+    </section>
 
-      <!-- Input Password -->
-      <div>
-        <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">Password</label>
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-amber-400">
-            <i class="fa-solid fa-lock"></i>
-          </span>
-          <input type="password" id="login-password" required placeholder="PASSWORD" 
-                 class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/60 border border-slate-700/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm transition-all shadow-inner">
-        </div>
-      </div>
-
-      <!-- Tombol Login -->
-      <button type="submit" 
-              class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:scale-[0.99] text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm border border-amber-400/30 cursor-pointer">
-        <span>LOGIN</span>
-        <i class="fa-solid fa-arrow-right"></i>
-      </button>
-    </form>
-
-    <!-- Footer Card dengan Logo BSS Kecil -->
-    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-center gap-2">
-      <img src="BSS.jpg" alt="BSS Icon" class="h-4 w-auto rounded-sm">
-      <p class="text-[11px] text-slate-300 font-medium">
-        Monitoring Control Plant
-      </p>
-    </div>
-
-  </div>
-</section>
-
-    <!-- MAIN APP SECTION WITH TOP NAVIGATION (Hidden until login) -->
+    <!-- MAIN APP SECTION -->
     <div id="main-app" class="hidden flex-1 flex flex-col min-h-screen bg-slate-50">
-        <!-- Top Header Navigation Bar (Top Navigator) -->
         <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-30">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
-                    <!-- Brand & Logo -->
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center shadow-md p-1.5 flex-shrink-0">
                             <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7">
@@ -315,7 +297,6 @@
                         </div>
                     </div>
 
-                    <!-- User Info & Logout on Right -->
                     <div class="flex items-center gap-4">
                         <div class="hidden sm:flex items-center gap-3 bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700">
                             <div class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs">
@@ -333,19 +314,14 @@
                     </div>
                 </div>
 
-                <!-- Horizontal Navigation Menu Bar -->
-                <nav class="flex items-center space-x-1 overflow-x-auto py-2.5 border-t border-slate-800" id="top-nav-container">
-                    <!-- Populated dynamically based on user role permissions -->
-                </nav>
+                <nav class="flex items-center space-x-1 overflow-x-auto py-2.5 border-t border-slate-800" id="top-nav-container"></nav>
             </div>
         </header>
 
-        <!-- Main Content Wrapper -->
         <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6 overflow-y-auto custom-scrollbar">
 
             <!-- 1. DASHBOARD VIEW -->
             <section id="view-dashboard" class="tab-content space-y-6">
-                <!-- Welcome Banner Tailored to Role -->
                 <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-amber-950 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
                         <div class="flex items-center gap-2 mb-1">
@@ -355,22 +331,19 @@
                         <h2 class="text-xl sm:text-2xl font-bold" id="dash-welcome-text">Selamat Datang</h2>
                         <p class="text-slate-300 text-xs sm:text-sm mt-1" id="dash-welcome-desc">SINERGY MAXIMIZE</p>
                     </div>
-                    <div class="flex gap-2 flex-wrap" id="dash-quick-actions">
-                        <!-- Dynamic Quick Action Buttons -->
-                    </div>
+                    <div class="flex gap-2 flex-wrap" id="dash-quick-actions"></div>
                 </div>
-                <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-    <!-- Tombol Upload Excel / CSV -->
-    <label class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 cursor-pointer">
-        <i class="fa-solid fa-file-arrow-up"></i> Upload Excel/CSV
-        <input type="file" id="upload-excel-file" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleExcelUpload(event)">
-    </label>
 
-    <!-- Tombol Export Excel -->
-    <button id="btn-export-csv" onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2">
-        <i class="fa-solid fa-file-excel"></i> Export Excel/CSV
-    </button>
-</div>
+                <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                    <label class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-file-arrow-up"></i> Upload Excel/CSV
+                        <input type="file" id="upload-excel-file" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleExcelUpload(event)">
+                    </label>
+                    <button id="btn-export-csv-dash" onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-file-excel"></i> Export Excel/CSV
+                    </button>
+                </div>
+
                 <!-- Filter Section -->
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -384,37 +357,28 @@
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                        <!-- Model / Code Unit Filter -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Code Unit / Model</label>
                             <select id="filter-unit" onchange="renderDashboard()" class="w-full text-sm rounded-lg border-slate-300 border p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                 <option value="ALL">Semua Unit</option>
                             </select>
                         </div>
-
-                        <!-- Jenis Oli Filter -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Oil</label>
                             <select id="filter-jenis-oil" onchange="renderDashboard()" class="w-full text-sm rounded-lg border-slate-300 border p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                 <option value="ALL">Semua Jenis Oil</option>
                             </select>
                         </div>
-
-                        <!-- Component Filter -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Component</label>
                             <select id="filter-component" onchange="renderDashboard()" class="w-full text-sm rounded-lg border-slate-300 border p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                 <option value="ALL">Semua Component</option>
                             </select>
                         </div>
-
-                        <!-- Cut Off Date Start -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Cut Off Tanggal Mulai</label>
                             <input type="date" id="filter-date-start" onchange="renderDashboard()" class="w-full text-sm rounded-lg border-slate-300 border p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                         </div>
-
-                        <!-- Cut Off Date End -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Cut Off Tanggal Selesai</label>
                             <input type="date" id="filter-date-end" onchange="renderDashboard()" class="w-full text-sm rounded-lg border-slate-300 border p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -422,7 +386,7 @@
                     </div>
                 </div>
 
-                <!-- KPI Metric Cards -->
+                <!-- KPI Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                         <div>
@@ -469,7 +433,7 @@
                     </div>
                 </div>
 
-                <!-- Charts Grid -->
+                <!-- Charts -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                         <div class="flex items-center justify-between mb-4">
@@ -478,9 +442,7 @@
                             </h3>
                             <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">Volume / Tanggal</span>
                         </div>
-                        <div class="h-72 relative">
-                            <canvas id="chart-trend"></canvas>
-                        </div>
+                        <div class="h-72 relative"><canvas id="chart-trend"></canvas></div>
                     </div>
 
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
@@ -490,9 +452,7 @@
                             </h3>
                             <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">Distribusi %</span>
                         </div>
-                        <div class="h-72 relative flex items-center justify-center">
-                            <canvas id="chart-jenis-oil"></canvas>
-                        </div>
+                        <div class="h-72 relative flex items-center justify-center"><canvas id="chart-jenis-oil"></canvas></div>
                     </div>
 
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
@@ -502,9 +462,7 @@
                             </h3>
                             <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">Total Liter</span>
                         </div>
-                        <div class="h-72 relative">
-                            <canvas id="chart-component"></canvas>
-                        </div>
+                        <div class="h-72 relative"><canvas id="chart-component"></canvas></div>
                     </div>
 
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
@@ -514,9 +472,7 @@
                             </h3>
                             <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">By Code Unit</span>
                         </div>
-                        <div class="h-72 relative">
-                            <canvas id="chart-unit"></canvas>
-                        </div>
+                        <div class="h-72 relative"><canvas id="chart-unit"></canvas></div>
                     </div>
                 </div>
             </section>
@@ -538,50 +494,42 @@
 
                     <form id="oil-input-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Code Unit <span class="text-red-500">*</span></label>
                                 <input type="text" id="input-code-unit" required placeholder="Contoh: DT-101, EX-202" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none uppercase">
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Tanggal Pengisian <span class="text-red-500">*</span></label>
                                 <input type="date" id="input-tanggal" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Jumlah Oil (Liter/Kg) <span class="text-red-500">*</span></label>
                                 <input type="number" step="0.1" min="0.1" id="input-jumlah-oil" required placeholder="0.0" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Jenis Oil <span class="text-red-500">*</span></label>
                                 <select id="input-jenis-oil" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                     <option value="" disabled selected>-- Pilih Jenis Oil --</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Type Oil <span class="text-red-500">*</span></label>
                                 <select id="input-type-oil" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                     <option value="" disabled selected>-- Pilih Type Oil --</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Component <span class="text-red-500">*</span></label>
                                 <select id="input-component" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                     <option value="" disabled selected>-- Pilih Component --</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Jenis Pengisian <span class="text-red-500">*</span></label>
                                 <select id="input-jenis-pengisian" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                     <option value="" disabled selected>-- Pilih Jenis Pengisian --</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Shift <span class="text-red-500">*</span></label>
                                 <select id="input-shift" required class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -590,22 +538,18 @@
                                     <option value="NS">NS (Night Shift)</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Station <span class="text-red-500">*</span></label>
                                 <input type="text" id="input-station" required placeholder="Contoh: Workshop Bay 1, Pitstop A" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Manpower Station / Mekanik <span class="text-red-500">*</span></label>
                                 <input type="text" id="input-manpower" required placeholder="Nama / Mekanik Penanggung Jawab" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                             <div class="md:col-span-2">
                                 <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Problem / Catatan Kerusakan</label>
                                 <input type="text" id="input-problem" placeholder="Deskripsikan problem (misal: Kebocoran Hose, Scheduled Service, dll)" class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                         </div>
 
                         <div class="pt-4 border-t border-slate-200 flex justify-end gap-3">
@@ -623,7 +567,6 @@
             <!-- 3. DATA HISTORY VIEW -->
             <section id="view-history" class="tab-content hidden space-y-6">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <!-- Table Search & Filter Bar -->
                     <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row gap-4 items-center justify-between bg-slate-50">
                         <div class="relative w-full md:w-96">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
@@ -639,7 +582,6 @@
                         </div>
                     </div>
 
-                    <!-- Data Table -->
                     <div class="overflow-x-auto custom-scrollbar">
                         <table class="w-full text-left text-xs text-slate-600">
                             <thead class="bg-slate-800 text-slate-200 uppercase font-semibold">
@@ -659,24 +601,19 @@
                                     <th class="py-3 px-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="history-table-body" class="divide-y divide-slate-200 bg-white">
-                                <!-- Dynamic Rows JS -->
-                            </tbody>
+                            <tbody id="history-table-body" class="divide-y divide-slate-200 bg-white"></tbody>
                         </table>
                     </div>
 
-                    <!-- Table Footer -->
                     <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs text-slate-500">
                         <span id="table-info">Menampilkan 0 data</span>
                     </div>
                 </div>
             </section>
 
-            <!-- 4. USER MANAGEMENT VIEW (With Password Access Viewer) -->
+            <!-- 4. USER MANAGEMENT VIEW -->
             <section id="view-users" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                    <!-- Form Tambah User -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                         <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
                             <i class="fa-solid fa-user-plus text-amber-500"></i> Tambah User Baru
@@ -688,17 +625,14 @@
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap</label>
                                 <input type="text" id="new-user-fullname" required placeholder="Contoh: Budi Santoso" class="w-full text-sm rounded-lg border-slate-300 border p-2.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Username Login</label>
                                 <input type="text" id="new-user-username" required placeholder="username" class="w-full text-sm rounded-lg border-slate-300 border p-2.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
                                 <input type="text" id="new-user-password" required placeholder="••••••••" class="w-full text-sm rounded-lg border-slate-300 border p-2.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             </div>
-
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Role Utama</label>
                                 <select id="new-user-role" required class="w-full text-sm rounded-lg border-slate-300 border p-2.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -708,14 +642,12 @@
                                     <option value="Viewer">Viewer (Read Only)</option>
                                 </select>
                             </div>
-
                             <button type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg shadow-md transition-all flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-user-check"></i> Simpan User Baru
                             </button>
                         </form>
                     </div>
 
-                    <!-- List User Table with Password Access -->
                     <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                         <div class="flex items-center justify-between mb-4">
                             <div>
@@ -739,13 +671,10 @@
                                         <th class="py-3 px-4 text-center">Hak Akses & Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="users-table-body" class="divide-y divide-slate-200">
-                                    <!-- Dynamic Users JS -->
-                                </tbody>
+                                <tbody id="users-table-body" class="divide-y divide-slate-200"></tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
             </section>
 
@@ -764,7 +693,6 @@
                         </div>
                     </div>
 
-                    <!-- Log Filter Bar -->
                     <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row gap-3 items-center justify-between">
                         <div class="relative w-full md:w-80">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
@@ -784,7 +712,6 @@
                         </div>
                     </div>
 
-                    <!-- Activity Log Table -->
                     <div class="overflow-x-auto custom-scrollbar">
                         <table class="w-full text-left text-xs text-slate-600">
                             <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
@@ -795,9 +722,7 @@
                                     <th class="py-3 px-4">Deskripsi Aktivitas</th>
                                 </tr>
                             </thead>
-                            <tbody id="activity-table-body" class="divide-y divide-slate-200 bg-white">
-                                <!-- Dynamic Activity Log Rows -->
-                            </tbody>
+                            <tbody id="activity-table-body" class="divide-y divide-slate-200 bg-white"></tbody>
                         </table>
                     </div>
                 </div>
@@ -807,6 +732,8 @@
     </div>
 
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRfzuRXSVG9_HGwhh3-KNTeXIIjfx4jczmyv3Ti5chzVVHzVt_KH_r3Y6evsCrCD4yuA/exec";
+
         const DROPDOWN_JENIS_PENGISIAN = [
             "PS1", "PS2", "PS3", "PS4", "PS4(G)", "PS INITIAL", "ADD", "FU TSR", "GREASING", "COMMISSIONING"
         ];
@@ -912,6 +839,7 @@
         window.onload = function() {
             populateDropdownOptions();
             initializeDefaultDates();
+            fetchLogsFromSheet();
         };
 
         function showToast(message, type = 'success') {
@@ -932,10 +860,7 @@
             toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
             
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
@@ -968,138 +893,39 @@
                 if (onConfirm) onConfirm();
             };
         }
-// URL Google Apps Script Web App Anda
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRfzuRXSVG9_HGwhh3-KNTeXIIjfx4jczmyv3Ti5chzVVHzVt_KH_r3Y6evsCrCD4yuA/exec";
 
-// Fungsi untuk Mengambil Data dari Google Spreadsheet saat Aplikasi Dimuat
-async function fetchLogsFromSheet() {
-    try {
-        showToast("Memuat data dari Google Spreadsheet...", "info");
-        const response = await fetch(SCRIPT_URL);
-        const result = await response.json();
-        if (Array.isArray(result) && result.length > 0) {
-            oilLogs = result;
-            populateUnitFilterDropdown();
-            renderHistoryTable();
-            if (currentUser && currentUser.permissions.view_dashboard) {
-                renderDashboard();
-            }
-            showToast("Data berhasil disinkronkan dari Spreadsheet!", "success");
-        }
-    } catch (error) {
-        console.error("Gagal mengambil data dari Google Spreadsheet:", error);
-        showToast("Gagal memuat data online. Menggunakan data lokal.", "error");
-    }
-}
-
-// Fungsi untuk Menyimpan Data / Sinkronisasi ke Google Spreadsheet
-async function syncDataToSheet(actionType, payloadData) {
-    try {
-        await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Menghindari masalah CORS pada Google Apps Script
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: actionType, data: payloadData })
-        });
-    } catch (error) {
-        console.error("Gagal mengirim data ke Google Spreadsheet:", error);
-    }
-}
-
-// Modifikasi saat Login Berhasil (Memuat data online)
-const originalHandleLogin = window.handleLogin;
-window.handleLogin = function(e) {
-    // Jalankan fungsi login asli
-    // (Pastikan dipanggil setelah verifikasi sukses)
-};
-
-// Modifikasi Fungsi Submit Form Input Transaksi
-const originalHandleFormSubmit = window.handleFormSubmit;
-window.handleFormSubmit = async function(e) {
-    e.preventDefault();
-
-    if (!currentUser.permissions.input_trx) {
-        showToast("Anda tidak memiliki akses untuk menambah transaksi!", "error");
-        return;
-    }
-
-    const newLog = {
-        id: Date.now(),
-        codeUnit: document.getElementById('input-code-unit').value.trim().toUpperCase(),
-        tanggal: document.getElementById('input-tanggal').value,
-        jumlah: parseFloat(document.getElementById('input-jumlah-oil').value),
-        jenisOil: document.getElementById('input-jenis-oil').value,
-        typeOil: document.getElementById('input-type-oil').value,
-        component: document.getElementById('input-component').value,
-        jenisPengisian: document.getElementById('input-jenis-pengisian').value,
-        shift: document.getElementById('input-shift').value,
-        station: document.getElementById('input-station').value.trim(),
-        manpower: document.getElementById('input-manpower').value.trim(),
-        problem: document.getElementById('input-problem').value.trim() || '-'
-    };
-
-    oilLogs.unshift(newLog);
-
-    // Kirim ke Google Spreadsheet secara background
-    await syncDataToSheet('create', newLog);
-
-    logActivity("Input Transaksi", `Menambahkan transaksi ${newLog.codeUnit} (${newLog.jumlah} L - ${newLog.jenisOil})`, "create");
-    populateUnitFilterDropdown();
-    renderHistoryTable();
-    resetForm();
-
-    showToast(`Transaksi oli unit ${newLog.codeUnit} berhasil disimpan ke Spreadsheet!`, "success");
-    switchTab('history');
-}
-
-// Fitur Upload Excel / CSV (Membaca file dan memasukkannya ke sistem & Spreadsheet)
-function handleExcelUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        const text = e.target.result;
-        const lines = text.split("\r\n").length > 1 ? text.split("\r\n") : text.split("\n");
-        
-        let importedCount = 0;
-        // Asumsi baris pertama adalah header, mulai baca dari baris ke-2
-        for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (!line) continue;
-            
-            const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            if (cols.length >= 3) {
-                const cleanCol = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
-                
-                const importedLog = {
-                    id: Date.now() + i,
-                    codeUnit: cleanCol(cols[0]) || "UNKNOWN",
-                    tanggal: cleanCol(cols[1]) || new Date().toISOString().split('T')[0],
-                    jumlah: parseFloat(cleanCol(cols[2])) || 0,
-                    jenisOil: cleanCol(cols[3]) || "General",
-                    typeOil: cleanCol(cols[4]) || "-",
-                    component: cleanCol(cols[5]) || "-",
-                    jenisPengisian: cleanCol(cols[6]) || "TOP UP",
-                    shift: cleanCol(cols[7]) || "DS",
-                    station: cleanCol(cols[8]) || "-",
-                    manpower: cleanCol(cols[9]) || "-",
-                    problem: cleanCol(cols[10]) || "-"
-                };
-
-                oilLogs.push(importedLog);
-                await syncDataToSheet('create', importedLog);
-                importedCount++;
+        async function fetchLogsFromSheet() {
+            try {
+                showToast("Memuat data dari Google Spreadsheet...", "info");
+                const response = await fetch(SCRIPT_URL);
+                const result = await response.json();
+                if (Array.isArray(result) && result.length > 0) {
+                    oilLogs = result;
+                    populateUnitFilterDropdown();
+                    renderHistoryTable();
+                    if (currentUser && currentUser.permissions.view_dashboard) {
+                        renderDashboard();
+                    }
+                    showToast("Data berhasil disinkronkan dari Spreadsheet!", "success");
+                }
+            } catch (error) {
+                console.error("Gagal mengambil data dari Google Spreadsheet:", error);
             }
         }
 
-        populateUnitFilterDropdown();
-        renderHistoryTable();
-        showToast(`Berhasil mengimpor dan menyimpan ${importedCount} data ke Google Spreadsheet!`, "success");
-        event.target.value = ''; // Reset input file
-    };
-    reader.readAsText(file);
-}
+        async function syncDataToSheet(actionType, payloadData) {
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: actionType, data: payloadData })
+                });
+            } catch (error) {
+                console.error("Gagal mengirim data ke Google Spreadsheet:", error);
+            }
+        }
+
         function getFormattedTimestamp() {
             const now = new Date();
             const year = now.getFullYear();
@@ -1143,10 +969,11 @@ function handleExcelUpload(event) {
 
         function populateUnitFilterDropdown() {
             const filterUnitSelect = document.getElementById('filter-unit');
+            if (!filterUnitSelect) return;
             const currentVal = filterUnitSelect.value;
             filterUnitSelect.innerHTML = '<option value="ALL">Semua Unit</option>';
             
-            const uniqueUnits = [...new Set(oilLogs.map(item => item.codeUnit.toUpperCase()))].sort();
+            const uniqueUnits = [...new Set(oilLogs.map(item => String(item.codeUnit || '').toUpperCase()))].filter(Boolean).sort();
             uniqueUnits.forEach(unit => {
                 filterUnitSelect.add(new Option(unit, unit));
             });
@@ -1165,8 +992,8 @@ function handleExcelUpload(event) {
             const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
             const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
 
-            document.getElementById('filter-date-start').value = firstDay;
-            document.getElementById('filter-date-end').value = lastDay;
+            if (document.getElementById('filter-date-start')) document.getElementById('filter-date-start').value = firstDay;
+            if (document.getElementById('filter-date-end')) document.getElementById('filter-date-end').value = lastDay;
         }
 
         function handleLogin(e) {
@@ -1228,7 +1055,6 @@ function handleExcelUpload(event) {
 
         function buildTopNav() {
             const topNav = document.getElementById('top-nav-container');
-
             const navItems = [
                 { key: 'dashboard', perm: 'view_dashboard', label: 'Dashboard', icon: 'fa-chart-line' },
                 { key: 'input', perm: 'input_trx', label: 'Input Transaksi', icon: 'fa-pen-to-square' },
@@ -1238,7 +1064,6 @@ function handleExcelUpload(event) {
             ];
 
             let navHTML = '';
-
             navItems.forEach(item => {
                 if (currentUser.permissions[item.perm]) {
                     navHTML += `
@@ -1249,7 +1074,6 @@ function handleExcelUpload(event) {
                     `;
                 }
             });
-
             topNav.innerHTML = navHTML;
         }
 
@@ -1270,7 +1094,6 @@ function handleExcelUpload(event) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`view-${tabName}`).classList.remove('hidden');
 
-            // Style Top Navigation Buttons
             document.querySelectorAll('.topnav-btn').forEach(btn => {
                 btn.classList.remove('text-amber-400', 'bg-slate-800', 'shadow-sm', 'border-b-2', 'border-amber-500');
                 btn.classList.add('text-slate-300');
@@ -1303,7 +1126,7 @@ function handleExcelUpload(event) {
             const endDate = document.getElementById('filter-date-end').value;
 
             return oilLogs.filter(item => {
-                if (filterUnit !== 'ALL' && item.codeUnit.toUpperCase() !== filterUnit.toUpperCase()) return false;
+                if (filterUnit !== 'ALL' && String(item.codeUnit || '').toUpperCase() !== filterUnit.toUpperCase()) return false;
                 if (filterJenis !== 'ALL' && item.jenisOil !== filterJenis) return false;
                 if (filterComp !== 'ALL' && item.component !== filterComp) return false;
                 if (startDate && item.tanggal < startDate) return false;
@@ -1327,7 +1150,6 @@ function handleExcelUpload(event) {
             quickActionsContainer.innerHTML = actionsHTML;
 
             const data = getFilteredData();
-
             const totalVolume = data.reduce((sum, item) => sum + parseFloat(item.jumlah || 0), 0);
             const totalTrx = data.length;
 
@@ -1338,7 +1160,8 @@ function handleExcelUpload(event) {
 
             data.forEach(item => {
                 const vol = parseFloat(item.jumlah || 0);
-                unitAgg[item.codeUnit] = (unitAgg[item.codeUnit] || 0) + vol;
+                const unit = item.codeUnit || 'UNKNOWN';
+                unitAgg[unit] = (unitAgg[unit] || 0) + vol;
                 oilAgg[item.jenisOil] = (oilAgg[item.jenisOil] || 0) + vol;
                 componentAgg[item.component] = (componentAgg[item.component] || 0) + vol;
                 dateAgg[item.tanggal] = (dateAgg[item.tanggal] || 0) + vol;
@@ -1381,7 +1204,6 @@ function handleExcelUpload(event) {
             const values = sortedDates.map(d => dateAgg[d]);
 
             if (chartTrendInstance) chartTrendInstance.destroy();
-
             chartTrendInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -1416,17 +1238,13 @@ function handleExcelUpload(event) {
             const values = Object.values(oilAgg);
 
             if (chartJenisOilInstance) chartJenisOilInstance.destroy();
-
             chartJenisOilInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: labels,
                     datasets: [{
                         data: values,
-                        backgroundColor: [
-                            '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6', 
-                            '#ec4899', '#06b6d4', '#f97316', '#64748b'
-                        ]
+                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#64748b']
                     }]
                 },
                 options: {
@@ -1443,7 +1261,6 @@ function handleExcelUpload(event) {
             const values = Object.values(componentAgg);
 
             if (chartComponentInstance) chartComponentInstance.destroy();
-
             chartComponentInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -1473,7 +1290,6 @@ function handleExcelUpload(event) {
             const values = Object.values(unitAgg);
 
             if (chartUnitInstance) chartUnitInstance.destroy();
-
             chartUnitInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -1490,16 +1306,13 @@ function handleExcelUpload(event) {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: {
-                        x: { beginAtZero: true }
-                    }
+                    scales: { x: { beginAtZero: true } }
                 }
             });
         }
 
-        function handleFormSubmit(e) {
+        async function handleFormSubmit(e) {
             e.preventDefault();
-
             if (!currentUser.permissions.input_trx) {
                 showToast("Anda tidak memiliki akses untuk menambah transaksi!", "error");
                 return;
@@ -1521,13 +1334,14 @@ function handleExcelUpload(event) {
             };
 
             oilLogs.unshift(newLog);
+            await syncDataToSheet('create', newLog);
 
             logActivity("Input Transaksi", `Menambahkan transaksi ${newLog.codeUnit} (${newLog.jumlah} L - ${newLog.jenisOil})`, "create");
             populateUnitFilterDropdown();
             renderHistoryTable();
             resetForm();
 
-            showToast(`Transaksi oli untuk unit ${newLog.codeUnit} berhasil disimpan!`, "success");
+            showToast(`Transaksi oli unit ${newLog.codeUnit} berhasil disimpan ke Spreadsheet!`, "success");
             switchTab('history');
         }
 
@@ -1542,11 +1356,7 @@ function handleExcelUpload(event) {
 
             const btnExport = document.getElementById('btn-export-csv');
             if (btnExport) {
-                if (currentUser && currentUser.permissions.export_data) {
-                    btnExport.classList.remove('hidden');
-                } else {
-                    btnExport.classList.add('hidden');
-                }
+                btnExport.style.display = (currentUser && currentUser.permissions.export_data) ? 'inline-flex' : 'none';
             }
 
             if (dataToRender.length === 0) {
@@ -1567,7 +1377,6 @@ function handleExcelUpload(event) {
                         </button>
                     `);
                 }
-
                 if (currentUser && currentUser.permissions.delete_trx) {
                     actions.push(`
                         <button onclick="confirmDeleteLog(${item.id})" title="Hapus Data" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded transition-all">
@@ -1604,12 +1413,12 @@ function handleExcelUpload(event) {
         function filterTable() {
             const query = document.getElementById('table-search').value.toLowerCase().trim();
             const filtered = oilLogs.filter(item => {
-                return item.codeUnit.toLowerCase().includes(query) ||
-                       item.jenisOil.toLowerCase().includes(query) ||
-                       item.typeOil.toLowerCase().includes(query) ||
-                       item.component.toLowerCase().includes(query) ||
-                       item.manpower.toLowerCase().includes(query) ||
-                       item.station.toLowerCase().includes(query);
+                return String(item.codeUnit || '').toLowerCase().includes(query) ||
+                       String(item.jenisOil || '').toLowerCase().includes(query) ||
+                       String(item.typeOil || '').toLowerCase().includes(query) ||
+                       String(item.component || '').toLowerCase().includes(query) ||
+                       String(item.manpower || '').toLowerCase().includes(query) ||
+                       String(item.station || '').toLowerCase().includes(query);
             });
             renderHistoryTable(filtered);
         }
@@ -1643,9 +1452,8 @@ function handleExcelUpload(event) {
             document.getElementById('edit-trx-modal').classList.add('hidden');
         }
 
-        function handleEditFormSubmit(e) {
+        async function handleEditFormSubmit(e) {
             e.preventDefault();
-
             if (!currentUser.permissions.edit_trx) {
                 showToast("Akses ditolak!", "error");
                 return;
@@ -1656,7 +1464,6 @@ function handleExcelUpload(event) {
             if (index === -1) return;
 
             const oldRecord = oilLogs[index];
-
             oilLogs[index] = {
                 id: id,
                 codeUnit: document.getElementById('edit-code-unit').value.trim().toUpperCase(),
@@ -1672,6 +1479,7 @@ function handleExcelUpload(event) {
                 problem: document.getElementById('edit-problem').value.trim() || '-'
             };
 
+            await syncDataToSheet('update', oilLogs[index]);
             logActivity("Edit Transaksi", `Perubahan data transaksi ${oldRecord.codeUnit} (${oldRecord.jumlah}L -> ${oilLogs[index].jumlah}L)`, "update");
 
             closeEditModal();
@@ -1696,8 +1504,9 @@ function handleExcelUpload(event) {
             showModal(
                 "Konfirmasi Hapus Data",
                 `Apakah Anda yakin ingin menghapus data transaksi pengisian oli unit ${item.codeUnit} (${item.jumlah} L)?`,
-                () => {
+                async () => {
                     oilLogs = oilLogs.filter(i => i.id !== id);
+                    await syncDataToSheet('delete', { id: id });
                     logActivity("Hapus Transaksi", `Menghapus transaksi unit ${item.codeUnit} (${item.jumlah} L - ${item.jenisOil})`, "delete");
 
                     populateUnitFilterDropdown();
@@ -1712,6 +1521,7 @@ function handleExcelUpload(event) {
 
         function renderUsersTable() {
             const tbody = document.getElementById('users-table-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             document.getElementById('user-count-badge').innerText = `${users.length} Users`;
@@ -1731,7 +1541,6 @@ function handleExcelUpload(event) {
                     'Operator': 'bg-slate-100 text-slate-800',
                     'Viewer': 'bg-amber-100 text-amber-800'
                 };
-
                 const roleBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-semibold ${roleBadgeMap[user.role] || 'bg-slate-100 text-slate-700'}">${user.role}</span>`;
 
                 const passwordCellHTML = `
@@ -1786,7 +1595,6 @@ function handleExcelUpload(event) {
 
         function handleAddUser(e) {
             e.preventDefault();
-
             if (currentUser && !currentUser.permissions.manage_users) {
                 showToast("Hanya Admin / Pengelola yang diizinkan menambah user baru!", "error");
                 return;
@@ -1853,7 +1661,6 @@ function handleExcelUpload(event) {
             document.getElementById('perm-modal-user-title').innerText = `User: ${user.fullname} (@${user.username}) - Role: ${user.role}`;
 
             const permKeys = ['view_dashboard', 'input_trx', 'edit_trx', 'delete_trx', 'view_history', 'manage_users', 'view_activity_logs', 'export_data'];
-            
             permKeys.forEach(k => {
                 const chk = document.getElementById(`perm-${k.replace(/_/g, '-')}`);
                 if (chk) {
@@ -1874,7 +1681,6 @@ function handleExcelUpload(event) {
             if (!user) return;
 
             const permKeys = ['view_dashboard', 'input_trx', 'edit_trx', 'delete_trx', 'view_history', 'manage_users', 'view_activity_logs', 'export_data'];
-
             permKeys.forEach(k => {
                 const chk = document.getElementById(`perm-${k.replace(/_/g, '-')}`);
                 if (chk) {
@@ -1883,7 +1689,6 @@ function handleExcelUpload(event) {
             });
 
             logActivity("Ubah Hak Akses", `Memperbarui hak akses permission untuk user ${user.username}`, "user");
-
             if (currentUser && currentUser.id === user.id) {
                 buildTopNav();
             }
@@ -1935,13 +1740,60 @@ function handleExcelUpload(event) {
 
             const filtered = activityLogs.filter(item => {
                 if (typeFilter !== 'ALL' && item.type !== typeFilter) return false;
-                return item.user.toLowerCase().includes(query) ||
-                       item.username.toLowerCase().includes(query) ||
-                       item.action.toLowerCase().includes(query) ||
-                       item.details.toLowerCase().includes(query);
+                return String(item.user || '').toLowerCase().includes(query) ||
+                       String(item.username || '').toLowerCase().includes(query) ||
+                       String(item.action || '').toLowerCase().includes(query) ||
+                       String(item.details || '').toLowerCase().includes(query);
             });
 
             renderActivityLogsTable(filtered);
+        }
+
+        function handleExcelUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const text = e.target.result;
+                const lines = text.split("\r\n").length > 1 ? text.split("\r\n") : text.split("\n");
+                
+                let importedCount = 0;
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (cols.length >= 3) {
+                        const cleanCol = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+                        
+                        const importedLog = {
+                            id: Date.now() + i,
+                            codeUnit: cleanCol(cols[0]) || "UNKNOWN",
+                            tanggal: cleanCol(cols[1]) || new Date().toISOString().split('T')[0],
+                            jumlah: parseFloat(cleanCol(cols[2])) || 0,
+                            jenisOil: cleanCol(cols[3]) || "General",
+                            typeOil: cleanCol(cols[4]) || "-",
+                            component: cleanCol(cols[5]) || "-",
+                            jenisPengisian: cleanCol(cols[6]) || "TOP UP",
+                            shift: cleanCol(cols[7]) || "DS",
+                            station: cleanCol(cols[8]) || "-",
+                            manpower: cleanCol(cols[9]) || "-",
+                            problem: cleanCol(cols[10]) || "-"
+                        };
+
+                        oilLogs.push(importedLog);
+                        await syncDataToSheet('create', importedLog);
+                        importedCount++;
+                    }
+                }
+
+                populateUnitFilterDropdown();
+                renderHistoryTable();
+                showToast(`Berhasil mengimpor dan menyimpan ${importedCount} data ke Google Spreadsheet!`, "success");
+                event.target.value = '';
+            };
+            reader.readAsText(file);
         }
 
         function exportToCSV() {
@@ -1960,17 +1812,17 @@ function handleExcelUpload(event) {
 
             oilLogs.forEach(row => {
                 const rowData = [
-                    `"${row.codeUnit}"`,
-                    `"${row.tanggal}"`,
-                    row.jumlah,
-                    `"${row.jenisOil}"`,
-                    `"${row.typeOil}"`,
-                    `"${row.component}"`,
-                    `"${row.jenisPengisian}"`,
-                    `"${row.shift}"`,
-                    `"${row.station}"`,
-                    `"${row.manpower}"`,
-                    `"${row.problem}"`
+                    `"${row.codeUnit || ''}"`,
+                    `"${row.tanggal || ''}"`,
+                    row.jumlah || 0,
+                    `"${row.jenisOil || ''}"`,
+                    `"${row.typeOil || ''}"`,
+                    `"${row.component || ''}"`,
+                    `"${row.jenisPengisian || ''}"`,
+                    `"${row.shift || ''}"`,
+                    `"${row.station || ''}"`,
+                    `"${row.manpower || ''}"`,
+                    `"${row.problem || ''}"`
                 ];
                 csvContent += rowData.join(",") + "\r\n";
             });
@@ -1978,13 +1830,12 @@ function handleExcelUpload(event) {
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Laporan_Oil_Monitoring_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute("download", `Laporan_Monitoring_Oil_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
-            logActivity("Export Data", "Mengunduh laporan data transaksi oli ke format CSV/Excel", "auth");
-            showToast("Laporan berhasil di-export ke CSV!", "success");
+            showToast("Laporan berhasil diunduh dalam format CSV/Excel!", "success");
         }
     </script>
 </body>
